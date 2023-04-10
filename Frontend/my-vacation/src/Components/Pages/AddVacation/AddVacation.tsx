@@ -1,0 +1,129 @@
+import {
+  Box,
+  Button,
+  ButtonGroup,
+  FormControl,
+  InputAdornment,
+  InputLabel,
+  OutlinedInput,
+  TextField,
+} from "@mui/material";
+import "./AddVacation.css";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import Vacation from "../../model/Vacations/Vacation";
+import { DateRangePicker } from "@mui/x-date-pickers-pro/DateRangePicker";
+import { DemoContainer, DemoItem } from "@mui/x-date-pickers/internals/demo";
+
+function AddVacation(): JSX.Element {
+  const navigate = useNavigate();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Vacation>();
+
+  const onSubmit = (data: Vacation) => {
+    console.log(data);
+    navigate("/AdminPage");
+  };
+
+  const onSubmitClick = () => {
+    if (Object.keys(errors).length > 0) {
+      // if there are errors dont add vacation
+      console.log(errors);
+    } else {
+      // no errors you can add vacation
+      handleSubmit(onSubmit)();
+    }
+  };
+  const handlePriceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    let value =+ event.target.value;
+  
+    if (value < 0) {
+      value = 0; // Set value to minimum if negative value entered
+    } else if (value > 10000) {
+      value = 10000; // Set value to maximum if greater than 10000
+    }
+  
+    // Update the input value
+    event.target.value = value.toString(); 
+  };
+  return (
+    <div className="AddVacation">
+      <div className="box">
+        <h2>Add Vacation</h2>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <TextField
+            required
+            label="Destination"
+            {...register("GetDestination", {
+              required: true,
+            })}
+          />
+          {errors.GetDestination?.type === "required" && (
+            <p className="error-message">Destination is needed</p>
+          )}
+          <br />
+          <br />
+          <TextField
+            required
+            label="Description"
+            multiline
+            rows={4}
+            {...register("GetDescription", {
+              required: true,
+            })}
+          />
+          {errors.GetDescription?.type === "required" && (
+            <p className="error-message">Description is needed</p>
+          )}
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DemoContainer components={["DateRangePicker"]}>
+              <DemoItem label="Vacation Duration " component="DateRangePicker">
+                <DateRangePicker disablePast format="DD/MM/YY" />
+              </DemoItem>
+            </DemoContainer>
+          </LocalizationProvider>
+          <br />
+          <FormControl fullWidth>
+            <InputLabel htmlFor="outlined-adornment-amount">Price</InputLabel>
+            <OutlinedInput
+              id="outlined-adornment-amount"
+              startAdornment={
+                <InputAdornment position="start">$</InputAdornment>
+              }
+              label="Amount"
+              type="number"
+              required
+              inputProps={{ min: 0, max: 10000 }}
+              onChange={handlePriceChange}
+            />
+          </FormControl>
+          <br />
+          <br />
+          <Box component="span" sx={{ p: 2, border: "1px dashed grey" }}>
+            <Button>Select Image</Button>
+          </Box>
+          <br />
+          <br />
+          <ButtonGroup
+            orientation="vertical"
+            aria-label="vertical outlined button group"
+          >
+            <Button color="success" type="submit" onClick={onSubmitClick}>
+              Add Vacation
+            </Button>
+            <Button color="error" onClick={() => navigate("/AdminPage")}>
+              Cancel
+            </Button>
+          </ButtonGroup>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+export default AddVacation;

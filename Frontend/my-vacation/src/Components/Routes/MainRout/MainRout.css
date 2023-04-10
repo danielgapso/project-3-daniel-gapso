@@ -1,0 +1,12 @@
+.MainRout {
+	text-align: center;
+}
+.box{
+	border: 3px solid lightblue;
+	width: 320px;
+	margin: auto;
+	border-radius: 7%;
+}
+.error-message{
+	color: red;
+}
