@@ -3,9 +3,9 @@ class User {
     private UserPassword: string;
     private UserLastName: string;
     private UserEmail: string;
-    private UserCode: string;
+    private UserCode: number;
 
-    constructor(UserFirstName: string, UserPassword: string, UserLastName: string , UserEmail: string, UserCode: string ) {
+    constructor(UserFirstName: string, UserPassword: string, UserLastName: string , UserEmail: string, UserCode: number ) {
         this.UserFirstName = UserFirstName;
         this.UserPassword = UserPassword;
         this.UserLastName = UserLastName;

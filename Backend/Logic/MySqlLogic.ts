@@ -2,6 +2,7 @@ import { OkPacket } from "mysql";
 import User from "../Models/Roles/User";
 import Vacation from "../Models/Vacations/Vacation";
 import dal_mysql from "../Utils/dal_mysql";
+import { response } from "express";
 
 //tables
 
@@ -45,16 +46,20 @@ const AddUser = async (NewUser: User) => {
  );`
     console.log("sql>", SQLcommand);
     const response: OkPacket = await dal_mysql.execute(SQLcommand);
-    const categoryId = response.insertId;
-    console.log("New Id", categoryId, " Message:", response.message);
-    return categoryId;
+    const UserCode = response.insertId;
+    console.log("New Id", UserCode, " Message:", response.message);
+    return UserCode;
 };
 
-const GetAllVacations = async () => { }
+const GetAllVacations = async () => {
+    const SQLcommand = `SELECT * FROM vacations.vacations`;
+    console.log("sql>", SQLcommand);
+    return await dal_mysql.execute(SQLcommand);
+};
 
-const FollowVacation = async (Vacation: Vacation) => { }
+const FollowVacation = async (Vacation: Vacation) => { };
 
-const UnFollowVacation = async (Vacation: Vacation) => { }
+const UnFollowVacation = async (Vacation: Vacation) => { };
 
 //admin 
 const AddVacation = async (NewVacation: Vacation) => {
@@ -62,18 +67,45 @@ const AddVacation = async (NewVacation: Vacation) => {
     INSERT INTO vacations.vacations 
     (Destination, Description, StartDate, EndDate, Price, Img)
      VALUES 
-    ('${NewVacation.GetDestination}', '${NewVacation.GetDescription}', '${NewVacation.GetStartDate}', 
-    '${NewVacation.GetEndDate}', '${NewVacation.GetPrice}', '${NewVacation.GetImg}');`
-  const response: OkPacket = await dal_mysql.execute(SQLcommand);
-  const VacationCode = response.insertId;
-  console.log("New Id", VacationCode, " Message:", response.message);
-  return VacationCode;
- 
-}
+    ('${NewVacation.Destination}', '${NewVacation.Description}', '${NewVacation.StartDate}', 
+    '${NewVacation.EndDate}', '${NewVacation.Price}', '${NewVacation.Img}');`
+    const response: OkPacket = await dal_mysql.execute(SQLcommand);
+    const VacationCode = response.insertId;
+    console.log("New Id", VacationCode, " Message:", response.message);
+    console.log("New Vacation object: ", NewVacation);
+    console.log("Destination:", NewVacation.Destination);
+    console.log("Description:", NewVacation.Description);
+    console.log("Start Date:", NewVacation.StartDate);
+    console.log("End Date:", NewVacation.EndDate);
+    console.log("Price:", NewVacation.Price);
+    console.log("Image:", NewVacation.Img);
+    return SQLcommand;
+};
 
-const UpdateVacation = async (Vacation: Vacation) => { }
+const UpdateVacation = async (Vacation: Vacation) => {
+    const SQLcommands = `
+    UPDATE
+    vacations.vacations
+     SET 
+     Destination = '${Vacation.Destination}', 
+     Description = '${Vacation.Description}',
+     StartDate = '${Vacation.StartDate}', 
+     EndDate = '${Vacation.EndDate}',
+     Price = '${Vacation.Price}', 
+     Img = '${Vacation.Img}' 
+     WHERE
+     (VacationCode = '${Vacation.VacationCode}');
+     `;
+    await dal_mysql.execute(SQLcommands);
+    console.log(SQLcommands);
+    return true;
+};
 
-const DeleteVacation = (id: number) => { }
+const DeleteVacation = (VacationCode: number) => {
+    const SQLcommand = `DELETE FROM vacations.vacations WHERE VacationCode=${VacationCode}`;
+    dal_mysql.execute(SQLcommand);
+    return true;
+};
 
 export default {
     AddUser,
@@ -84,5 +116,5 @@ export default {
     UpdateVacation,
     DeleteVacation,
     CreateUsersTable,
-    createVacationsTable
-}
+    createVacationsTable,
+};
