@@ -57,9 +57,13 @@ const GetAllVacations = async () => {
     return await dal_mysql.execute(SQLcommand);
 };
 
-const FollowVacation = async (Vacation: Vacation) => { };
+const FollowVacation = async (Vacation: Vacation) => {
 
-const UnFollowVacation = async (Vacation: Vacation) => { };
+};
+
+const UnFollowVacation = async (Vacation: Vacation) => { 
+
+};
 
 //admin 
 const AddVacation = async (NewVacation: Vacation) => {

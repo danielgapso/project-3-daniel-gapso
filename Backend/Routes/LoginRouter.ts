@@ -1,4 +1,5 @@
 import express, { NextFunction, Request, Response } from "express";
+import MySqlLogic from "../Logic/MySqlLogic";
 
 const loginRouter = express.Router();
 
@@ -13,8 +14,9 @@ loginRouter.post(
 loginRouter.post(
   "/register",
   async (request: Request, response: Response, next: NextFunction) => {
-    console.log("register user");
-    response.status(201).json(`{"msg":"welcome new user"}`);
+    const NewUser = request.body;
+    const result = await MySqlLogic.AddUser(NewUser);
+    response.status(201).json(result);
   }
 );
 
