@@ -35,7 +35,7 @@ const createVacationsTable = () => {
 };
 
 //user
-const getUser = async (user: User) => {
+const getUser = async (UserCode:number) => {
     const SQLcommand = `SELECT * FROM vacations.users`;
     console.log("sql>", SQLcommand);
     return await dal_mysql.execute(SQLcommand);
@@ -119,6 +119,7 @@ const DeleteVacation = (VacationCode: number) => {
 
 export default {
     AddUser,
+    getUser,
     GetAllVacations,
     FollowVacation,
     UnFollowVacation,
