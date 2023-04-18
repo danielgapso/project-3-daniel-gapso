@@ -6,8 +6,7 @@ const loginRouter = express.Router();
 loginRouter.post(
   "/login",
   async (request: Request, response: Response, next: NextFunction) => {
-    console.log("login user");
-    response.status(200).json(`{"msg":"all is good"}`);
+    response.status(202).json(await MySqlLogic.GetAllVacations());
   }
 );
 

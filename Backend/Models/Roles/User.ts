@@ -1,9 +1,9 @@
 class User {
-    private UserFirstName: string;
-    private UserPassword: string;
-    private UserLastName: string;
-    private UserEmail: string;
-    private UserCode: number;
+    public UserFirstName: string;
+    public UserPassword: string;
+    public UserLastName: string;
+    public UserEmail: string;
+    public UserCode: number;
 
     constructor(UserFirstName: string, UserPassword: string, UserLastName: string , UserEmail: string, UserCode: number ) {
         this.UserFirstName = UserFirstName;

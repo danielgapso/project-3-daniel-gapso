@@ -35,14 +35,20 @@ const createVacationsTable = () => {
 };
 
 //user
+const getUser = async (user: User) => {
+    const SQLcommand = `SELECT * FROM vacations.users`;
+    console.log("sql>", SQLcommand);
+    return await dal_mysql.execute(SQLcommand);
+};
+
 const AddUser = async (NewUser: User) => {
     const SQLcommand = `
     INSERT INTO vacations.users 
     (UserFirstName, UserLastName, UserPassword, UserEmail) 
-    VALUES ('${NewUser.GetUserFirstName}', 
-    '${NewUser.GetUserLastName}', 
-    '${NewUser.GetUserPassword}', 
-    ${NewUser.GetUserEmail}
+    VALUES ('${NewUser.UserFirstName}', 
+    '${NewUser.UserLastName}', 
+    '${NewUser.UserPassword}', 
+    ${NewUser.UserEmail}
  );`
     console.log("sql>", SQLcommand);
     const response: OkPacket = await dal_mysql.execute(SQLcommand);
@@ -61,7 +67,7 @@ const FollowVacation = async (Vacation: Vacation) => {
 
 };
 
-const UnFollowVacation = async (Vacation: Vacation) => { 
+const UnFollowVacation = async (Vacation: Vacation) => {
 
 };
 
