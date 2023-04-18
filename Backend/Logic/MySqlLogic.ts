@@ -36,7 +36,7 @@ const createVacationsTable = () => {
 
 //user
 const getUser = async (UserCode:number) => {
-    const SQLcommand = `SELECT * FROM vacations.users`;
+    const SQLcommand = `SELECT * FROM users WHERE usercode = ${UserCode}`;
     console.log("sql>", SQLcommand);
     return await dal_mysql.execute(SQLcommand);
 };
