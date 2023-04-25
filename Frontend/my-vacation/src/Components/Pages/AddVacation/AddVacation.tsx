@@ -16,8 +16,17 @@ import { useNavigate } from "react-router-dom";
 import Vacation from "../../model/Vacations/Vacation";
 import { DateRangePicker } from "@mui/x-date-pickers-pro/DateRangePicker";
 import { DemoContainer, DemoItem } from "@mui/x-date-pickers/internals/demo";
+import { useState } from "react";
 
 function AddVacation(): JSX.Element {
+
+  const [Destination, setDestination] = useState("");
+  const [Description, setDescription] = useState("");
+  const [StartDate, setStartDate] = useState("");
+  const [EndDate, setEndDate] = useState("");
+  const [Price, setPrice] = useState(0);
+  const [Img, setImg] = useState("");
+
   const navigate = useNavigate();
   const {
     register,
@@ -51,6 +60,11 @@ function AddVacation(): JSX.Element {
     // Update the input value
     event.target.value = value.toString(); 
   };
+
+  const AddNewVacation = () => {
+    const NewVacation = new Vacation(Destination,Description,StartDate,EndDate,Price,Img);
+  }
+
   return (
     <div className="AddVacation">
       <div className="box">
@@ -59,11 +73,11 @@ function AddVacation(): JSX.Element {
           <TextField
             required
             label="Destination"
-            {...register("GetDestination", {
+            {...register("Destination", {
               required: true,
             })}
           />
-          {errors.GetDestination?.type === "required" && (
+          {errors.Destination?.type === "required" && (
             <p className="error-message">Destination is needed</p>
           )}
           <br />
@@ -73,11 +87,11 @@ function AddVacation(): JSX.Element {
             label="Description"
             multiline
             rows={4}
-            {...register("GetDescription", {
+            {...register("Description", {
               required: true,
             })}
           />
-          {errors.GetDescription?.type === "required" && (
+          {errors.Description?.type === "required" && (
             <p className="error-message">Description is needed</p>
           )}
           <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -123,6 +137,7 @@ function AddVacation(): JSX.Element {
         </form>
       </div>
     </div>
+
   );
 }
 
