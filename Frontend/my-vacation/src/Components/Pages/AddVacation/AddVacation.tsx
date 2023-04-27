@@ -16,10 +16,10 @@ import { useNavigate } from "react-router-dom";
 import Vacation from "../../model/Vacations/Vacation";
 import { DateRangePicker } from "@mui/x-date-pickers-pro/DateRangePicker";
 import { DemoContainer, DemoItem } from "@mui/x-date-pickers/internals/demo";
-import { useState } from "react";
+import { SyntheticEvent, useEffect, useState } from "react";
+import axios from "axios";
 
 function AddVacation(): JSX.Element {
-
   const [Destination, setDestination] = useState("");
   const [Description, setDescription] = useState("");
   const [StartDate, setStartDate] = useState("");
@@ -27,6 +27,7 @@ function AddVacation(): JSX.Element {
   const [Price, setPrice] = useState(0);
   const [Img, setImg] = useState("");
 
+  
   const navigate = useNavigate();
   const {
     register,
@@ -49,21 +50,32 @@ function AddVacation(): JSX.Element {
     }
   };
   const handlePriceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    let value =+ event.target.value;
-  
+    let value = +event.target.value;
+
     if (value < 0) {
       value = 0; // Set value to minimum if negative value entered
     } else if (value > 10000) {
       value = 10000; // Set value to maximum if greater than 10000
     }
-  
+
     // Update the input value
-    event.target.value = value.toString(); 
+    event.target.value = value.toString();
   };
 
   const AddNewVacation = () => {
-    const NewVacation = new Vacation(Destination,Description,StartDate,EndDate,Price,Img);
-  }
+    const NewVacation = new Vacation(
+      Destination,
+      Description,
+      StartDate,
+      EndDate,
+      Price,
+      Img
+    );
+
+    axios
+      .post("http://localhost:4000/api/v1/vacations/AddVacation", NewVacation)
+      .then((res) => navigate("/"));
+  };
 
   return (
     <div className="AddVacation">
@@ -72,11 +84,13 @@ function AddVacation(): JSX.Element {
         <form onSubmit={handleSubmit(onSubmit)}>
           <TextField
             required
+            onKeyUp={(args) => {
+              setDestination((args.currentTarget as HTMLInputElement).value);
+            }}
             label="Destination"
-            {...register("Destination", {
-              required: true,
-            })}
+            {...register("Destination", { required: true })}
           />
+
           {errors.Destination?.type === "required" && (
             <p className="error-message">Destination is needed</p>
           )}
@@ -87,6 +101,9 @@ function AddVacation(): JSX.Element {
             label="Description"
             multiline
             rows={4}
+            onKeyUp={(args) => {
+              setDescription((args.currentTarget as HTMLInputElement).value);
+            }}
             {...register("Description", {
               required: true,
             })}
@@ -137,7 +154,6 @@ function AddVacation(): JSX.Element {
         </form>
       </div>
     </div>
-
   );
 }
 
