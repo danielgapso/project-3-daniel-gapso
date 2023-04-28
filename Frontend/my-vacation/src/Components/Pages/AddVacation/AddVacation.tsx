@@ -27,7 +27,6 @@ function AddVacation(): JSX.Element {
   const [Price, setPrice] = useState(0);
   const [Img, setImg] = useState("");
 
-  
   const navigate = useNavigate();
   const {
     register,
@@ -76,6 +75,15 @@ function AddVacation(): JSX.Element {
       .post("http://localhost:4000/api/v1/vacations/AddVacation", NewVacation)
       .then((res) => navigate("/"));
   };
+  const MyDATE = (args: any) => {
+    let startDate = args[0];
+    let endDate = args[1];
+    console.log("Start Date: ", startDate);
+    console.log("End Date: ", endDate);
+    setStartDate(startDate);
+    setEndDate(endDate);
+  };
+
 
   return (
     <div className="AddVacation">
@@ -112,11 +120,11 @@ function AddVacation(): JSX.Element {
             <p className="error-message">Description is needed</p>
           )}
           <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DemoContainer components={["DateRangePicker"]}>
-              <DemoItem label="Vacation Duration " component="DateRangePicker">
-                <DateRangePicker disablePast format="DD/MM/YY" />
-              </DemoItem>
-            </DemoContainer>
+            <DateRangePicker
+              disablePast
+              format="DD/MM/YY"
+              onChange={(event) => MyDATE(event)}
+            />
           </LocalizationProvider>
           <br />
           <FormControl fullWidth>
