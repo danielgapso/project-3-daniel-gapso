@@ -18,6 +18,7 @@ import { DateRangePicker } from "@mui/x-date-pickers-pro/DateRangePicker";
 import { DemoContainer, DemoItem } from "@mui/x-date-pickers/internals/demo";
 import { SyntheticEvent, useEffect, useState } from "react";
 import axios from "axios";
+import { DatePicker } from "@mui/x-date-pickers";
 
 function AddVacation(): JSX.Element {
   const [Destination, setDestination] = useState("");
@@ -76,13 +77,16 @@ function AddVacation(): JSX.Element {
       .post("http://localhost:4000/api/v1/vacations/AddVacation", NewVacation)
       .then((res) => navigate("/"));
   };
-  const MyDATE = (args: any) => {
-    let startDate = args[0];
-    let endDate = args[1];
+
+  const StartDateChange = (args: any) => {
+    let startDate = args;
     console.log("Start Date: ", startDate);
-    console.log("End Date: ", endDate);
     setStartDate(startDate);
-    setEndDate(endDate);
+  };
+  const EndDateChange = (args: any) => {
+    let startDate = args;
+    console.log("End Date: ", startDate);
+    setEndDate(startDate);
   };
 
   return (
@@ -120,11 +124,20 @@ function AddVacation(): JSX.Element {
             <p className="error-message">Description is needed</p>
           )}
           <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DateRangePicker
-              disablePast
-              format="DD/MM/YY"
-              onChange={(event) => MyDATE(event)}
-            />
+            <DemoContainer components={["DatePicker"]}>
+              <DatePicker
+                label="Start Date"
+                onChange={(event) => StartDateChange(event)}
+                disablePast
+                format="DD/MM/YY"
+              />
+              <DatePicker
+                label="End Date"
+                onChange={(event) => EndDateChange(event)}
+                disablePast
+                format="DD/MM/YY"
+              />
+            </DemoContainer>
           </LocalizationProvider>
           <br />
           <FormControl fullWidth>
