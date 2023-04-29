@@ -14,8 +14,8 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import Vacation from "../../model/Vacations/Vacation";
-import { DateRangePicker } from "@mui/x-date-pickers-pro/DateRangePicker";
-import { DemoContainer, DemoItem } from "@mui/x-date-pickers/internals/demo";
+
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { SyntheticEvent, useEffect, useState } from "react";
 import axios from "axios";
 import { DatePicker } from "@mui/x-date-pickers";
@@ -35,8 +35,8 @@ function AddVacation(): JSX.Element {
     formState: { errors },
   } = useForm<Vacation>();
 
-  const onSubmit = (data: Vacation) => {
-    console.log(data);
+  const onSubmit = () => {
+    AddNewVacation()
     navigate("/AdminPage");
   };
 
@@ -50,9 +50,17 @@ function AddVacation(): JSX.Element {
     }
   };
 
+  const DestinationSet = (args: SyntheticEvent) => {
+    let value = (args.target as HTMLInputElement).value;
+    setDestination(value);
+  };
+  const DescriptionSet = (args: SyntheticEvent) => {
+    let value = (args.target as HTMLInputElement).value;
+    setDescription(value);
+  };
+
   const handlePriceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     let value = +event.target.value;
-
     if (value < 0) {
       value = 0; // Set value to minimum if negative value entered
     } else if (value > 10000) {
@@ -75,7 +83,7 @@ function AddVacation(): JSX.Element {
 
     axios
       .post("http://localhost:4000/api/v1/vacations/AddVacation", NewVacation)
-      .then((res) => navigate("/"));
+      .then((res) => navigate("/AdminPage"));
   };
 
   const StartDateChange = (args: any) => {
@@ -96,11 +104,9 @@ function AddVacation(): JSX.Element {
         <form onSubmit={handleSubmit(onSubmit)}>
           <TextField
             required
-            onKeyUp={(args) => {
-              setDestination((args.currentTarget as HTMLInputElement).value);
-            }}
             label="Destination"
-            {...register("Destination", { required: true })}
+           onChange={DestinationSet}
+           
           />
 
           {errors.Destination?.type === "required" && (
@@ -113,12 +119,7 @@ function AddVacation(): JSX.Element {
             label="Description"
             multiline
             rows={4}
-            onKeyUp={(args) => {
-              setDescription((args.currentTarget as HTMLInputElement).value);
-            }}
-            {...register("Description", {
-              required: true,
-            })}
+            onChange={DescriptionSet}          
           />
           {errors.Description?.type === "required" && (
             <p className="error-message">Description is needed</p>
