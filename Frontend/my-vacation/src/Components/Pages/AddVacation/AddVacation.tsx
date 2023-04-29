@@ -48,6 +48,7 @@ function AddVacation(): JSX.Element {
       handleSubmit(onSubmit)();
     }
   };
+
   const handlePriceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     let value = +event.target.value;
 
@@ -57,8 +58,8 @@ function AddVacation(): JSX.Element {
       value = 10000; // Set value to maximum if greater than 10000
     }
 
-    // Update the input value
-    event.target.value = value.toString();
+    console.log("Price changed to:", value);
+    setPrice(value);
   };
 
   const AddNewVacation = () => {
@@ -83,7 +84,6 @@ function AddVacation(): JSX.Element {
     setStartDate(startDate);
     setEndDate(endDate);
   };
-
 
   return (
     <div className="AddVacation">
@@ -138,6 +138,7 @@ function AddVacation(): JSX.Element {
               type="number"
               required
               inputProps={{ min: 0, max: 10000 }}
+              value={Price}
               onChange={handlePriceChange}
             />
           </FormControl>
