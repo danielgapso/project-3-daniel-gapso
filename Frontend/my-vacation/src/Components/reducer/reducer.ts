@@ -13,7 +13,7 @@ export const INITIAL_STATE = {
     FETCH_CLEAR: "FETCH_CLEAR",
   };
   
-  const songReducer = (state: any, action: any) => {
+  const vacationReducer = (state: any, action: any) => {
     switch (action.type) {
       case ACTION_TYPES.FETCH_START:
         return {
@@ -43,5 +43,5 @@ export const INITIAL_STATE = {
     }
 }
   
-  export default songReducer;
+  export default vacationReducer;
   
