@@ -36,7 +36,7 @@ function AddVacation(): JSX.Element {
   } = useForm<Vacation>();
 
   const onSubmit = () => {
-    AddNewVacation()
+    AddNewVacation();
     navigate("/AdminPage");
   };
 
@@ -105,13 +105,17 @@ function AddVacation(): JSX.Element {
           <TextField
             required
             label="Destination"
-           onChange={DestinationSet}
-           
+            value={Destination}
+            onChange={(e) => {
+              setDestination(e.target.value);
+              register("Destination", {
+                required: true,
+                value: e.target.value,
+              });
+            }}
+            error={Boolean(errors.Destination)}
+            helperText={errors.Destination && "Destination is required"}
           />
-
-          {errors.Destination?.type === "required" && (
-            <p className="error-message">Destination is needed</p>
-          )}
           <br />
           <br />
           <TextField
@@ -119,7 +123,7 @@ function AddVacation(): JSX.Element {
             label="Description"
             multiline
             rows={4}
-            onChange={DescriptionSet}          
+            onChange={DescriptionSet}
           />
           {errors.Description?.type === "required" && (
             <p className="error-message">Description is needed</p>
@@ -131,7 +135,7 @@ function AddVacation(): JSX.Element {
                 onChange={(event) => StartDateChange(event)}
                 disablePast
                 format="DD/MM/YY"
-              />
+              />  
               <DatePicker
                 label="End Date"
                 onChange={(event) => EndDateChange(event)}
