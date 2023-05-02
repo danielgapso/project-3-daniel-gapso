@@ -1,20 +1,29 @@
 import { useEffect, useState } from "react";
 import "./Vacations.css";
 import axios from "axios";
+import { vacations } from "../../redux/VacationStore";
+import { downloaVacationAction } from "../../redux/VacationReducer";
 
 function Vacations(): JSX.Element {
-  const [vacations, setvaCations] = useState([]);
+
+  const [refresh, setRefresh] = useState(true);
+
   useEffect(() => {
-    axios
-      .get("http://localhost:4000/api/v1/vacations/GetAllVacations")
-      .then((res) => setvaCations(res.data));
+
+    if (vacations.getState().allVacations.allVacations.length<1) {
+      console.log("getting data from backend....");
+      axios.get("http://localhost:4000/api/v1/vacations/GetAllVacations").then((response) => {
+        vacations.dispatch(downloaVacationAction(response.data));
+        setRefresh(false);
+      });
+    }
   }, []);
 
   return (
     <div className="Vacations">
       <div className="Container">
 
-        {vacations.map((item) => (
+        {vacations.getState().allVacations.allVacations.map((item) => (
           <div key={item["VacationCode"]} className="VacationCard">
             <span>{item["Destination"]}</span>
             <br />

@@ -1,9 +1,13 @@
 export const INITIAL_STATE = {
     loading: false,
-    songsData: {},
+    vacationData: {},
     error: "",
-    songURL: "",
-    songImg: "",
+    Destination: "",
+    Description: "",
+    Img: "",
+    StartDate: "",
+    EndDate: "",
+    Price: 0,
   };
   
   export const ACTION_TYPES = {
@@ -20,21 +24,21 @@ export const INITIAL_STATE = {
           ...state,
           loading: true,
           error: "",
-          songData: {},
+          vacationData: {},
         };
       case ACTION_TYPES.FETCH_SUCCESS:
         return {
           ...state,
           loading: true,
           error: "",
-          songData: {},
+          vacationData: {},
         };
       case ACTION_TYPES.FETCH_ERROR:
         return {
           ...state,
           loading: false,
           error: action.payload,
-          songData: {},
+          vacationData: {},
         };
       case ACTION_TYPES.FETCH_CLEAR:
         return state;
