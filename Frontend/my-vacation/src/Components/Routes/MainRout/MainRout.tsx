@@ -19,7 +19,7 @@ function MainRout(): JSX.Element {
                 <Route path="/Vacations" element={<Vacations/>} />
                 <Route path="/AdminPage" element={<AdminPage/>} />
                 <Route path="/AddVacation" element={<AddVacation/>} />
-                <Route path="/EditVacation" element={<EditVacation/>} />
+                <Route path="/EditVacation/:Destination/:Description/:StartDate/:EndDate/:Price/:Img" element={<EditVacation/>} />
                 <Route path="/VacationCharts" element={<VacationCharts/>} />
                 <Route path="/" element={<MainPage/>} />
                 <Route path="*" element={<Page404/>} />
