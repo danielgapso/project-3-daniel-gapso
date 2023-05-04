@@ -2,6 +2,8 @@ import "./singleVacation.css";
 import "../../../model/Vacations/Vacation";
 import Vacation from "../../../model/Vacations/Vacation";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useState } from "react";
 
 interface VacationProps {
   vacationData: Vacation;
@@ -9,6 +11,14 @@ interface VacationProps {
 
 function SingleVacation(props: VacationProps): JSX.Element {
     const navigate = useNavigate();
+    const [showModal, setShowModal] = useState(false);
+
+    const handleDelete = () => {
+      axios.delete(
+        `http://localhost:4000/api/v1/vacations/delete/${props.vacationData.VacationCode}`
+      );
+      setShowModal(false);
+    };
 
   return (
     <div className="singleVacation">
@@ -35,6 +45,14 @@ function SingleVacation(props: VacationProps): JSX.Element {
             ${props.vacationData.Price}
             `)}>
                 Edit Vacation</button>
+                <button onClick={() => setShowModal(true)}>❌</button>
+        {showModal && (
+          <div className="modal">
+            <p>Are you sure you want to delete this vacation?</p>
+            <button onClick={handleDelete}>Yes</button>
+            <button onClick={() => setShowModal(false)}>No</button>
+          </div>
+        )}
       </div>
       <br />
     </div>

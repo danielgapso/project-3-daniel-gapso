@@ -3,6 +3,7 @@ import "./AdminPage.css";
 import axios from "axios";
 import SingleVacation from "../AddVacation/singleVacation/singleVacation"
 import Vacation from "../../model/Vacations/Vacation";
+import { useNavigate } from "react-router-dom";
 
 function AdminPage(): JSX.Element {
   // const [vacations, setvaCations] = useState([]);
@@ -11,6 +12,7 @@ function AdminPage(): JSX.Element {
       .get("http://localhost:4000/api/v1/vacations/GetAllVacations")
       .then((res) => setvaCations(res.data));
   }, []);
+  const navigate = useNavigate();
 
   const [vacations, setvaCations] = useState<Vacation[]>([]);
 
@@ -33,7 +35,8 @@ function AdminPage(): JSX.Element {
           </div>
         ))}
       </div> */}
-
+<button onClick={()=>
+            navigate(`/addVacation`)}>Add New Vacation</button>
 {vacations.map((item) => (
         <SingleVacation 
         key={item.VacationCode} 
