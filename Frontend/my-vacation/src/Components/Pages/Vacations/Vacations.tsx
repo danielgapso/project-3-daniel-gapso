@@ -9,7 +9,6 @@ function Vacations(): JSX.Element {
   const [refresh, setRefresh] = useState(true);
 
   useEffect(() => {
-
     if (vacations.getState().allVacations.allVacations.length<1) {
       console.log("getting data from backend....");
       axios.get("http://localhost:4000/api/v1/vacations/GetAllVacations").then((response) => {
