@@ -10,7 +10,7 @@ export enum vacationActionType {
     addVacation = "addVacation",
     deleteVacation = "deleteVacation",
     editVacation = "editVacation",
-    downloaVacation = "downloaVacation"
+    downloadVacation = "downloaVacation"
 }
 
 //action data structure
@@ -32,8 +32,8 @@ export const editVacationAction = (editVacation: Vacation): VacationAction => {
     return { type: vacationActionType.editVacation, payload: editVacation, };
 };
 
-export const downloaVacationAction = (allVacations: Vacation[]): VacationAction => {
-    return { type: vacationActionType.downloaVacation, payload: allVacations };
+export const downloadVacationAction = (allVacations: Vacation[]): VacationAction => {
+    return { type: vacationActionType.downloadVacation, payload: allVacations };
 };
 
 export function VacationReducer(
@@ -55,7 +55,7 @@ export function VacationReducer(
             );
             newState.allVacations = [...newState.allVacations, action.payload];
             break;
-        case vacationActionType.downloaVacation:
+        case vacationActionType.downloadVacation:
             newState.allVacations = action.payload;
             break;
     }
