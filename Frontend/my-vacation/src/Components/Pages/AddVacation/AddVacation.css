@@ -1,3 +1,9 @@
 .AddVacation {
     color: cyan;
 }
+
+.container{
+    display: flex;
+   flex-wrap: wrap;
+   margin: auto;
+}

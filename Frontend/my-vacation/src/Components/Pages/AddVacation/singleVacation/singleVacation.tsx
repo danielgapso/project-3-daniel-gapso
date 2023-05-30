@@ -5,6 +5,14 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useState } from "react";
 
+import * as React from 'react';
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+
 interface VacationProps {
   vacationData: Vacation;
 }
@@ -23,19 +31,27 @@ function SingleVacation(props: VacationProps): JSX.Element {
   return (
     <div className="singleVacation">
       <div className="container">
-        <span>{props.vacationData.Description}</span>
-        <br />
-        <span>{props.vacationData.Destination}</span>
-        <br />
-        <span>{props.vacationData.Img}</span>
-        <br />
-        <span>{props.vacationData.StartDate}</span>
-        <br />
-        <span>{props.vacationData.EndDate}</span>
-        <br />
-        <span>{props.vacationData.Price}</span>
-        <br />
-        <button onClick={()=>
+      <Card sx={{ maxWidth: 345 }}>
+      <CardMedia
+        sx={{ height: 140 }}
+        
+        image="/static/images/cards/contemplative-reptile.jpg"
+        title="green iguana"
+        
+      />
+      <CardContent>
+        <Typography gutterBottom variant="h5" component="div">
+        {props.vacationData.Destination}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+        {props.vacationData.Description} <br/>
+        {props.vacationData.StartDate}<br/>
+        {props.vacationData.EndDate}<br/>
+        {props.vacationData.Price}<br/>
+        </Typography>
+      </CardContent>
+      <CardActions>
+        <Button size="small" onClick={()=>
             navigate(`/EditVacation/
             ${props.vacationData.Description}/
             ${props.vacationData.Destination}/
@@ -43,18 +59,18 @@ function SingleVacation(props: VacationProps): JSX.Element {
             ${props.vacationData.StartDate}/
             ${props.vacationData.EndDate}/
             ${props.vacationData.Price}
-            `)}>
-                Edit Vacation</button>
-                <button onClick={() => setShowModal(true)}>❌</button>
+            `)} >Edit Vacation</Button>
+        <Button size="small" onClick={() => setShowModal(true)}>❌</Button>
         {showModal && (
           <div className="modal">
             <p>Are you sure you want to delete this vacation?</p>
-            <button onClick={handleDelete}>Yes</button>
-            <button onClick={() => setShowModal(false)}>No</button>
+            <Button size="small" onClick={handleDelete}>Yes</Button>
+            <Button size="small" onClick={() => setShowModal(false)}>No</Button>
           </div>
         )}
-      </div>
-      <br />      
+      </CardActions>
+    </Card>
+      </div><br /><br />
     </div>
   );
 }
