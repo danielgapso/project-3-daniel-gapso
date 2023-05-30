@@ -3,7 +3,6 @@ import "./Vacations.css";
 import axios from "axios";
 import { vacations } from "../../redux/VacationStore";
 import { downloadVacationAction } from "../../redux/VacationReducer";
-import { useNavigate } from "react-router-dom";
 import Vacation from "../../model/Vacations/Vacation";
 import SingleVacation from "../AddVacation/singleVacation/singleVacation";
 

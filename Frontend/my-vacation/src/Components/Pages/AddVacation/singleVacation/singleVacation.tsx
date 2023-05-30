@@ -54,7 +54,7 @@ function SingleVacation(props: VacationProps): JSX.Element {
           </div>
         )}
       </div>
-      <br />
+      <br />      
     </div>
   );
 }
