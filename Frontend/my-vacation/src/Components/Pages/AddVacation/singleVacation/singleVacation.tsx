@@ -35,9 +35,7 @@ function SingleVacation(props: VacationProps): JSX.Element {
       <CardMedia
         sx={{ height: 140 }}
         
-        image="/static/images/cards/contemplative-reptile.jpg"
-        title="green iguana"
-        
+        image={props.vacationData.Img}
       />
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">
