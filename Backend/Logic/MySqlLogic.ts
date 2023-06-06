@@ -37,11 +37,15 @@ const createVacationsTable = () => {
 const CreateFollowersTable = () => {
     const SQLcommand = `
     CREATE TABLE IF NOT EXISTS vacations.followers (
-        UserCode VARCHAR(45) NOT NULL,
-        VacationCode VARCHAR(45) NOT NULL);
+        UserCode INT NOT NULL,
+        VacationCode INT NOT NULL,
+        FOREIGN KEY (UserCode) REFERENCES users(UserCode),
+        FOREIGN KEY (VacationCode) REFERENCES vacations(VacationCode)
+    );
     `;
     const response = dal_mysql.execute(SQLcommand);
 };
+
 
 //user
 const getUser = async (UserCode:number) => {
