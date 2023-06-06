@@ -34,6 +34,15 @@ const createVacationsTable = () => {
     const response = dal_mysql.execute(SQLcommand);
 };
 
+const CreateFollowersTable = () => {
+    const SQLcommand = `
+    CREATE TABLE IF NOT EXISTS vacations.followers (
+        UserCode VARCHAR(45) NOT NULL,
+        VacationCode VARCHAR(45) NOT NULL);
+    `;
+    const response = dal_mysql.execute(SQLcommand);
+};
+
 //user
 const getUser = async (UserCode:number) => {
     const SQLcommand = `SELECT * FROM users WHERE usercode = ${UserCode}`;
@@ -128,4 +137,5 @@ export default {
     DeleteVacation,
     CreateUsersTable,
     createVacationsTable,
+    CreateFollowersTable
 };
