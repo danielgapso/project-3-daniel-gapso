@@ -26,6 +26,7 @@ server.use("/api/v1/users", loginRouter);
 console.log("check if table exists...");
 logic.CreateUsersTable();
 logic.createVacationsTable();
+logic.CreateFollowersTable();
 
 server.use("*", ErrorHandler);
 
