@@ -35,15 +35,15 @@ function Login(): JSX.Element {
           <TextField
             required
             label="Email"
-            {...register("GetUserEmail", {
+            {...register("UserEmail", {
               required: true,
               pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
             })}
           />
-          {errors.GetUserEmail?.type === "required" && (
+          {errors.UserEmail?.type === "required" && (
             <p className="error-message">Email is required.</p>
           )}
-          {errors.GetUserEmail?.type === "pattern" && (
+          {errors.UserEmail?.type === "pattern" && (
             <p className="error-message">Invalid email format</p>
           )}
           <br />
@@ -52,12 +52,12 @@ function Login(): JSX.Element {
             required
             label="Password"
             type="password"
-            {...register("GetUserPassword", { required: true, minLength: 4 })}
+            {...register("UserPassword", { required: true, minLength: 4 })}
           />
-          {errors.GetUserPassword && (
+          {errors.UserPassword && (
             <p className="error-message">Password is required</p>
           )}
-          {errors.GetUserPassword?.type === "minLength" && (
+          {errors.UserPassword?.type === "minLength" && (
             <p className="error-message">
               Password must be at least 4 characters long
             </p>
