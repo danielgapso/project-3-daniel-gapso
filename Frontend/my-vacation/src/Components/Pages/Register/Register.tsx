@@ -29,34 +29,28 @@ function Register(): JSX.Element {
   const onSubmit = (data: userForm) => {
     addNewUser(data);
   };
-  
-  const onLoginClick = () => {
-    if (Object.keys(errors).length > 0) {
-      // if there are errors dont login
-      console.log(errors);
-    } else {
-      // no errors you can login
-      handleSubmit(onSubmit)();
-    }
-  };
 
   const addNewUser = (data: userForm) => {
     const formData = new FormData();
     formData.append("UserFirstName", data.UserFirstName);
     formData.append("UserLastName", data.UserLastName);
     formData.append("UserEmail", data.UserEmail);
-    formData.append("UserPassword", data.UserPassword);  
-    
+    formData.append("UserPassword", data.UserPassword);
+
     axios
-    .post("http://localhost:4000/api/v1/users/register", formData, {   
-    })
-    .then((res) => {
-      navigate("/Vacations");
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-};
+      .post("http://localhost:4000/api/v1/users/register", formData)
+      .then((res) => {
+        navigate("/Vacations");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const onLoginClick = () => {
+    // Call handleSubmit function in the form's onSubmit event handler
+    handleSubmit(onSubmit)();
+  };
 
   return (
     <div className="Register">
@@ -119,6 +113,7 @@ function Register(): JSX.Element {
           )}
           <br />
           <br />
+          {/* Form fields */}
           <ButtonGroup
             orientation="vertical"
             aria-label="vertical outlined button group"
