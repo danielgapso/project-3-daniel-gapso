@@ -11,6 +11,7 @@ function Register(): JSX.Element {
   const [UserLastName, setUserLastName] = useState("");
   const [UserEmail, setUserEmail] = useState("");
   const [UserPassword, setUserPassword] = useState("");
+  const [serverError, setServerError] = useState("");
 
   const navigate = useNavigate();
   const {
@@ -40,7 +41,15 @@ function Register(): JSX.Element {
     axios
       .post("http://localhost:4000/api/v1/users/register", formData)
       .then((res) => {
-        navigate("/Vacations");
+        if (res.data === "Email already exists in the database.") {
+          setServerError("Email already exists");
+        } else {
+          navigate("/Vacations");
+        }
+      })
+      .catch((error) => {
+        console.log("Error:", error.message);
+        setServerError(error.message);
       });
   };
 
@@ -87,6 +96,7 @@ function Register(): JSX.Element {
           {errors.UserEmail?.type === "pattern" && (
             <p className="error-message">Email is invaild</p>
           )}
+          {serverError && <p className="error-message">{serverError}</p>}
           <br />
           <br />
           <TextField
@@ -109,7 +119,7 @@ function Register(): JSX.Element {
             orientation="vertical"
             aria-label="vertical outlined button group"
           >
-            <Button color="primary" type="submit" >
+            <Button color="primary" type="submit">
               Register
             </Button>
 
