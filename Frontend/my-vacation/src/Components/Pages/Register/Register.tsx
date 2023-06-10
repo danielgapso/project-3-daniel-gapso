@@ -41,15 +41,7 @@ function Register(): JSX.Element {
       .post("http://localhost:4000/api/v1/users/register", formData)
       .then((res) => {
         navigate("/Vacations");
-      })
-      .catch((error) => {
-        console.log(error);
       });
-  };
-
-  const onLoginClick = () => {
-    // Call handleSubmit function in the form's onSubmit event handler
-    handleSubmit(onSubmit)();
   };
 
   return (
@@ -113,14 +105,14 @@ function Register(): JSX.Element {
           )}
           <br />
           <br />
-          {/* Form fields */}
           <ButtonGroup
             orientation="vertical"
             aria-label="vertical outlined button group"
           >
-            <Button color="primary" type="submit" onClick={onLoginClick}>
+            <Button color="primary" type="submit" >
               Register
             </Button>
+
             <Button color="secondary" onClick={() => navigate("/Login")}>
               login
             </Button>
