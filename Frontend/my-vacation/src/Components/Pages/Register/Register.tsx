@@ -41,7 +41,7 @@ function Register(): JSX.Element {
     axios
       .post("http://localhost:4000/api/v1/users/register", formData)
       .then((res) => {
-        if (res.data === "Email already exists in the database.") {
+        if (res.data === "Email already exists in the database") {
           setServerError("Email already exists");
         } else {
           navigate("/Vacations");

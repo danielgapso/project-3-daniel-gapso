@@ -56,14 +56,12 @@ const getUser = async (UserCode:number) => {
 
 const AddUser = async (NewUser: User) => {
     const { UserFirstName, UserLastName, UserPassword, UserEmail } = NewUser;
-  
     // Check if the email already exists
     const existingUser = await getUserByEmail(UserEmail);
     if (existingUser) {
       // Return an error message instead of throwing an error
-      return "Email already exists in the database.";
+      return "Email already exists in the database";
     }
-  
     const SQLcommand = `
       INSERT INTO vacations.users 
       (UserFirstName, UserLastName, UserPassword, UserEmail) 
@@ -75,7 +73,6 @@ const AddUser = async (NewUser: User) => {
     console.log("New Id", UserCode, " Message:", response.message);
     return UserCode;
   };
-  
   
 const GetAllVacations = async () => {
     const SQLcommand = `SELECT * FROM vacations.vacations`;
@@ -159,5 +156,5 @@ export default {
     CreateUsersTable,
     createVacationsTable,
     CreateFollowersTable,
-   
+    getUserByEmail,
 };

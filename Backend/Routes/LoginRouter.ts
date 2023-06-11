@@ -3,14 +3,19 @@ import MySqlLogic from "../Logic/MySqlLogic";
 
 const loginRouter = express.Router();
 
-loginRouter.post(
-  "/login/:UserCode",
-  async (request: Request, response: Response, next: NextFunction) => {
-    const UserCode = +request.params.UserCode;
-    response.status(202).json(await MySqlLogic.getUser(UserCode));
-    console.log(response);
+loginRouter.post("/login", async (request: Request, response: Response, next: NextFunction) => {
+  const { UserEmail, UserPassword } = request.body;
+
+  // Perform the logic to check if the user exists in the MySQL database
+  const user = await MySqlLogic.getUserByEmail(UserEmail);
+
+  if (user && user.UserPassword === UserPassword) {
+    response.status(200).json({ success: true, message: "Login successful" });
+  } else {
+    response.status(401).json({ success: false, message: "Invalid email or password" });
   }
-);
+});
+
 
 loginRouter.post(
   "/register",
