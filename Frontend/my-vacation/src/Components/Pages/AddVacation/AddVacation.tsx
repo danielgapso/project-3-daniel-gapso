@@ -1,8 +1,10 @@
 import axios from "axios";
-import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Vacation from "../../model/Vacations/Vacation";
+import { Button, ButtonGroup, TextField } from "@mui/material";
+import Textarea from "@mui/joy/Textarea";
 
 function AddVacation() {
   const [Destination, setDestination] = useState("");
@@ -17,6 +19,7 @@ function AddVacation() {
     register,
     handleSubmit,
     formState: { errors },
+    control,
   } = useForm<VacationFormValues>();
 
   type VacationFormValues = {
@@ -32,13 +35,12 @@ function AddVacation() {
     AddNewVacation(data);
   };
 
-  const onSubmitClick = () => {
-    if (Object.keys(errors).length > 0) {
-      console.log(errors);
-    } else {
-      handleSubmit(onSubmit)();
+  useEffect(() => {
+    if (StartDate && EndDate && StartDate > EndDate) {
+      // If the end date is prior to the start date, reset the end date
+      setEndDate("");
     }
-  };
+  }, [StartDate, EndDate]);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -76,10 +78,10 @@ function AddVacation() {
       <div className="box">
         <h2>Add Vacation</h2>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <input
+          <TextField
             type="text"
             required
-            placeholder="Destination"
+            label="Destination"
             {...register("Destination", {
               required: true,
             })}
@@ -87,10 +89,15 @@ function AddVacation() {
           {errors.Destination?.type === "required" && (
             <p className="error-message">Destination is needed</p>
           )}
-          <br /><br />
-          <textarea
-            required
+          <br />
+          <br />
+          <Textarea
+            disabled={false}
+            minRows={2}
             placeholder="Description"
+            size="md"
+            variant="plain"
+            required
             {...register("Description", {
               required: true,
             })}
@@ -98,38 +105,86 @@ function AddVacation() {
           {errors.Description?.type === "required" && (
             <p className="error-message">Description is needed</p>
           )}
-          <br /><br />
-          <input
-            type="date"
-            required
-            placeholder="Start Date"
-            min={new Date().toISOString().split("T")[0]}
-            {...register("StartDate", {
-              required: true,
-            })}
+          <br />
+          <br />
+          <Controller
+            name="StartDate"
+            control={control}
+            rules={{ required: true }}
+            defaultValue="" // Add a default value for the StartDate field
+            render={({ field }) => (
+              <TextField
+                type="date"
+                required
+                placeholder="Start Date"
+                inputProps={{
+                  min: new Date().toISOString().split("T")[0],
+                }}
+                value={field.value} // Use the value prop from the field object
+                onChange={(e) => {
+                  setStartDate(e.target.value);
+                  field.onChange(e);
+                }}
+              />
+            )}
           />
-          {errors.StartDate?.type === "required" && (
+          {errors.StartDate && (
             <p className="error-message">Start Date is needed</p>
           )}
-          <br /><br />
-          <input
-            type="date"
-            required
-            placeholder="End Date"
-            min={new Date().toISOString().split("T")[0]}
-            {...register("EndDate", {
+          <br />
+          <br />
+          <Controller
+            name="EndDate"
+            control={control}
+            rules={{
               required: true,
-            })}
+              validate: (value) => {
+                if (StartDate && value < StartDate) {
+                  return "End Date cannot be prior to Start Date";
+                }
+                return true;
+              },
+            }}
+            defaultValue="" // Add a default value for the EndDate field
+            render={({ field }) => (
+              <>
+                <TextField
+                  type="date"
+                  required
+                  placeholder="End Date"
+                  inputProps={{
+                    min: StartDate || new Date().toISOString().split("T")[0],
+                  }}
+                  value={field.value} // Use the value prop from the field object
+                  onChange={(e) => {
+                    setEndDate(e.target.value);
+                    field.onChange(e);
+                  }}
+                />
+                {errors.EndDate && (
+                  <p className="error-message">End Date is needed</p>
+                )}
+              </>
+            )}
           />
-          {errors.EndDate?.type === "required" && (
-            <p className="error-message">End Date is needed</p>
-          )}
-          <br /><br />
-          <input
+          <br />
+          <br />
+          <TextField
             type="number"
             required
-            min={0}
-            max={10000}
+            inputProps={{
+              min: 0,
+              max: 10000,
+              step: 1,
+              onInput: (e) => {
+                const value = (e.target as HTMLInputElement).valueAsNumber;
+                if (value < 0) {
+                  (e.target as HTMLInputElement).value = "0"; // Set the value to the minimum allowed value
+                } else if (value > 10000) {
+                  (e.target as HTMLInputElement).value = "10000"; // Set the value to the maximum allowed value
+                }
+              },
+            }}
             placeholder="Price"
             {...register("Price", {
               required: true,
@@ -138,7 +193,8 @@ function AddVacation() {
           {errors.Price?.type === "required" && (
             <p className="error-message">Price is needed</p>
           )}
-          <br /><br />
+          <br />
+          <br />
           <input
             type="file"
             required
@@ -150,12 +206,18 @@ function AddVacation() {
           )}
           <br />
           <br />
-          <button type="submit" onClick={onSubmitClick}>
-            Add Vacation
-          </button>
-          <button type="button" onClick={() => navigate("/AdminPage")}>
-            Cancel
-          </button>
+          <ButtonGroup
+            orientation="vertical"
+            aria-label="vertical outlined button group"
+          >
+            <Button color="primary" type="submit">
+              Add Vacation
+            </Button>
+
+            <Button color="secondary" onClick={() => navigate("/AdminPage")}>
+              Cancel
+            </Button>
+          </ButtonGroup>
         </form>
       </div>
     </div>
