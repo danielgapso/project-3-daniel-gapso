@@ -26,8 +26,12 @@ function Login(): JSX.Element {
       const result = response.data;
       console.log("Response:", result); // Log the response
       if (result.success) {
-        // User exists, navigate to the desired page
-        navigate("/Vacations");
+        // Check if email is adminmail@admin.com and password is admin
+        if (data.UserEmail === 'adminmail@admin.com' && data.UserPassword === 'admin') {
+          navigate("/AdminPage");
+        } else {
+          navigate("/Vacations");
+        }
       } else {
         // User does not exist, display the error message
         setErrorMessage(result.message);
@@ -36,12 +40,13 @@ function Login(): JSX.Element {
     } catch (error: any) {
       console.error("Error:", error);
       if (error.response?.status === 401) {
-        setErrorMessage("Email or password are incorrect");
+        setErrorMessage("Email or password is incorrect");
       } else {
         setErrorMessage(error.message);
       }
     }
   };
+  
   
   const onLoginClick = () => {
     if (Object.keys(errors).length > 0) {
