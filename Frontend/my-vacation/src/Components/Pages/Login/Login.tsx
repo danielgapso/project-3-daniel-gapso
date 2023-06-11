@@ -10,8 +10,6 @@ function Login(): JSX.Element {
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState("");
 
-
-
   const {
     register,
     handleSubmit,
@@ -20,27 +18,30 @@ function Login(): JSX.Element {
 
   const onSubmit = async (data: User) => {
     console.log(data);
-  
     try {
-      const response = await axios.post("http://localhost:4000/api/v1/users/login", data);
+      const response = await axios.post(
+        "http://localhost:4000/api/v1/users/login",
+        data
+      );
       const result = response.data;
-  
       console.log("Response:", result); // Log the response
-  
       if (result.success) {
         // User exists, navigate to the desired page
         navigate("/Vacations");
       } else {
         // User does not exist, display the error message
         setErrorMessage(result.message);
+        console.log("Response:", result.message);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error:", error);
-      // Handle error cases if necessary
+      if (error.response?.status === 401) {
+        setErrorMessage("Email or password are incorrect");
+      } else {
+        setErrorMessage(error.message);
+      }
     }
   };
-  
-  
   
   const onLoginClick = () => {
     if (Object.keys(errors).length > 0) {
@@ -53,8 +54,7 @@ function Login(): JSX.Element {
       handleSubmit(onSubmit)();
     }
   };
-  
-  
+
 
   return (
     <div className="Login">
@@ -91,7 +91,7 @@ function Login(): JSX.Element {
               Password must be at least 4 characters long
             </p>
           )}
-        {errorMessage && <p className="error-message">{errorMessage}</p>}
+          {errorMessage && <p className="error-message">{errorMessage}</p>}
 
           <br />
           <br />
