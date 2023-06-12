@@ -17,7 +17,7 @@ VacationsRouter.post(
     const fileName = Date.now() + "-" + imageFile.name;
 
     // Save the image file to the server-side folder
-    imageFile.mv(`path/to/upload/folder/${fileName}`, async (error) => {
+    imageFile.mv(`images/${fileName}`, async (error) => {
       if (error) {
         console.log(error);
         return response.status(500).json({ error: "Failed to upload image" });

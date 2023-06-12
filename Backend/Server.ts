@@ -13,7 +13,7 @@ server.use(cors());
 
 server.use(express.json());
 
-server.use(express.static("Vacations"));
+server.use(express.static("images"));
 
 server.use(fileUpload({ createParentPath: true }));
 

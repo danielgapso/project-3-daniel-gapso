@@ -66,7 +66,7 @@ function Register(): JSX.Element {
             })}
           />
           {errors.UserFirstName?.type === "required" && (
-            <p className="error-message">Name is needed</p>
+            <p className="error-message">First name is needed</p>
           )}
           <br />
           <br />
@@ -78,7 +78,7 @@ function Register(): JSX.Element {
             })}
           />
           {errors.UserLastName?.type === "required" && (
-            <p className="error-message">Name is needed</p>
+            <p className="error-message">Last name is needed</p>
           )}
           <br />
           <br />
@@ -122,7 +122,6 @@ function Register(): JSX.Element {
             <Button color="primary" type="submit">
               Register
             </Button>
-
             <Button color="secondary" onClick={() => navigate("/Login")}>
               login
             </Button>
