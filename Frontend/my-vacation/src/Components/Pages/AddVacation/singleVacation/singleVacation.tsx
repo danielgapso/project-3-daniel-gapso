@@ -36,7 +36,7 @@ function SingleVacation(props: VacationProps): JSX.Element {
             sx={{ height: 140 }}
             component="img" // Use the 'img' component instead of 'div'
             alt={props.vacationData.Destination} // Set the alt attribute for accessibility
-            src={`/images/${encodeURIComponent(props.vacationData.Img)}`}
+            src={`http://localhost:4000/images/${props.vacationData.Img}`}
           />
           <CardContent>
             <Typography gutterBottom variant="h5" component="div">
