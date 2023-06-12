@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Vacation from "../../model/Vacations/Vacation";
 import { Button, ButtonGroup, TextField } from "@mui/material";
-import Textarea from "@mui/joy/Textarea";
 
 function AddVacation() {
   const [Destination, setDestination] = useState("");
@@ -12,9 +11,10 @@ function AddVacation() {
   const [StartDate, setStartDate] = useState("");
   const [EndDate, setEndDate] = useState("");
   const [Price, setPrice] = useState(0);
-  const [Img, setImg] = useState<File | null>(null); // Track the selected image file
+  const [img, setImg] = useState<File | null>(null);
 
   const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
@@ -28,7 +28,7 @@ function AddVacation() {
     StartDate: string;
     EndDate: string;
     Price: number;
-    Img: FileList; // Define Img field as FileList type
+    Img: File | null;
   };
 
   const onSubmit = (data: VacationFormValues) => {
@@ -42,12 +42,6 @@ function AddVacation() {
     }
   }, [StartDate, EndDate]);
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      setImg(e.target.files[0]); // Store the selected image file
-    }
-  };
-
   const AddNewVacation = (data: VacationFormValues) => {
     const formData = new FormData();
     formData.append("Destination", data.Destination);
@@ -55,14 +49,14 @@ function AddVacation() {
     formData.append("StartDate", data.StartDate);
     formData.append("EndDate", data.EndDate);
     formData.append("Price", data.Price.toString());
-    if (Img) {
-      formData.append("Img", Img); // Append the image file to the FormData
+    if (img) {
+      formData.append("Img", img);
     }
 
     axios
       .post("http://localhost:4000/api/v1/vacations/AddVacation", formData, {
         headers: {
-          "Content-Type": "multipart/form-data", // Set the correct content type for file upload
+          "Content-Type": "multipart/form-data",
         },
       })
       .then((res) => {
@@ -71,6 +65,13 @@ function AddVacation() {
       .catch((error) => {
         console.log(error);
       });
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files && e.target.files[0];
+    if (file) {
+      setImg(file);
+    }
   };
 
   return (
@@ -91,12 +92,8 @@ function AddVacation() {
           )}
           <br />
           <br />
-          <Textarea
-            disabled={false}
-            minRows={2}
-            placeholder="Description"
-            size="md"
-            variant="plain"
+          <TextField
+            label="Description"
             required
             {...register("Description", {
               required: true,
@@ -195,15 +192,8 @@ function AddVacation() {
           )}
           <br />
           <br />
-          <input
-            type="file"
-            required
-            accept="image/*" // Allow only image file selection
-            onChange={handleImageChange} // Handle file selection event
-          />
-          {errors.Img?.type === "required" && (
-            <p className="error-message">Img is needed</p>
-          )}
+          <input type="file" onChange={handleImageChange} required />
+          {errors.Img && <p className="error-message">Img is needed</p>}
           <br />
           <br />
           <ButtonGroup
