@@ -28,15 +28,17 @@ function SingleVacation(props: VacationProps): JSX.Element {
     setShowModal(false);
   };
 
+  console.log(props.vacationData.Img);
   return (
     <div className="singleVacation">
       <div className="container">
         <Card sx={{ maxWidth: 345 }}>
+          
           <CardMedia
             sx={{ height: 140 }}
             component="img" // Use the 'img' component instead of 'div'
             alt={props.vacationData.Destination} // Set the alt attribute for accessibility
-            src={`http://localhost:4000/images/${props.vacationData.Img}`}
+            src={`http://localhost:4000/${props.vacationData.Img}`}
           />
           <CardContent>
             <Typography gutterBottom variant="h5" component="div">
