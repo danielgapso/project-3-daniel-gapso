@@ -114,26 +114,30 @@ function EditVacation(): JSX.Element {
           <br />
           <br />
           <Controller
-            name="StartDate"
-            control={control}
-            rules={{ required: true }}
-            defaultValue={params.StartDate || ""}
-            render={({ field }) => (
-              <TextField
-                type="date"
-                required
-                placeholder="Start Date"
-                inputProps={{
-                  min: new Date().toISOString().split("T")[0],
-                }}
-                value={field.value}
-                onChange={(e) => {
-                  setStartDate(e.target.value);
-                  field.onChange(e);
-                }}
-              />
-            )}
-          />
+  name="StartDate"
+  control={control}
+  rules={{ required: true }}
+  defaultValue={params.StartDate || ""}
+  render={({ field }) => {
+    const { onChange, value } = field; // Extract field properties
+    return (
+      <TextField
+        type="date"
+        required
+        placeholder="Start Date"
+        inputProps={{
+          min: new Date().toISOString().split("T")[0],
+        }}
+        value={value}
+        onChange={(e) => {
+          setStartDate(e.target.value);
+          onChange(e); // Call the onChange function from the field
+        }}
+      />
+    );
+  }}
+/>
+
           {errors.StartDate && (
             <p className="error-message">Start Date is needed</p>
           )}
