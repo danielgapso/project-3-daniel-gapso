@@ -30,9 +30,9 @@ function EditVacation(): JSX.Element {
   const [Destination, setDestination] = useState(params.Destination);
   const [Description, setDescription] = useState(params.Description);
   const [Img, setImg] = useState(params.Img);
-  const [currentPrice, setCurrentPrice] = useState<number>(0); // Use a different variable name to avoid redeclaration
-  const [StartDate, setStartDate] = useState<string>(params.StartDate || "");
-  const [EndDate, setEndDate] = useState<string>(params.EndDate || "");
+  const [Price, setPrice] = useState(params.Price);
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
 
   const onSubmit = (data: VacationFormValues) => {
     AddEditVacation(data);
@@ -63,6 +63,7 @@ function EditVacation(): JSX.Element {
       });
   };
 
+
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files && e.target.files[0];
     if (file) {
@@ -75,11 +76,7 @@ function EditVacation(): JSX.Element {
     }
   };
 
-  useEffect(() => {
-    if (params.Price) {
-      setCurrentPrice(parseFloat(params.Price));
-    }
-  }, [params.Price]);
+  console.log(startDate, endDate);
 
   return (
     <div className="EditVacation">
@@ -93,7 +90,7 @@ function EditVacation(): JSX.Element {
             {...register("Destination", {
               required: true,
             })}
-            value={Destination}
+            defaultValue={Destination}
           />
           {errors.Destination?.type === "required" && (
             <p className="error-message">Destination is needed</p>
@@ -106,76 +103,64 @@ function EditVacation(): JSX.Element {
             {...register("Description", {
               required: true,
             })}
-            value={Description}
+            defaultValue={Description}
           />
           {errors.Description?.type === "required" && (
             <p className="error-message">Description is needed</p>
           )}
           <br />
           <br />
-          <Controller
-  name="StartDate"
-  control={control}
-  rules={{ required: true }}
+
+        <TextField
+  type="date"
+  required
+  placeholder="Start Date"
+  inputProps={{
+    min: new Date().toISOString().split("T")[0],
+  }}
+  {...register("StartDate", { required: true })}
   defaultValue={params.StartDate || ""}
-  render={({ field }) => {
-    const { onChange, value } = field; // Extract field properties
-    return (
-      <TextField
-        type="date"
-        required
-        placeholder="Start Date"
-        inputProps={{
-          min: new Date().toISOString().split("T")[0],
-        }}
-        value={value}
-        onChange={(e) => {
-          setStartDate(e.target.value);
-          onChange(e); // Call the onChange function from the field
-        }}
-      />
-    );
+  onChange={(e) => {
+    const selectedDate = new Date(e.target.value);
+    setStartDate(selectedDate);
+    if (endDate && selectedDate > endDate) {
+      setEndDate(null);
+    }
   }}
 />
-
           {errors.StartDate && (
             <p className="error-message">Start Date is needed</p>
           )}
           <br />
           <br />
-          <Controller
-            name="EndDate"
-            control={control}
-            rules={{
+          <TextField
+            type="date"
+            required
+            placeholder="End Date"
+            inputProps={{
+              min: startDate
+                ? startDate.toISOString().split("T")[0]
+                : new Date().toISOString().split("T")[0],
+            }}
+            {...register("EndDate", {
               required: true,
               validate: (value) => {
-                if (StartDate && value < StartDate) {
+                const endDateValue = new Date(value); // Convert value to Date object
+                if (startDate && endDateValue < startDate) {
                   return "End Date cannot be prior to Start Date";
                 }
                 return true;
               },
+            })}
+            defaultValue={
+              params.EndDate
+                ? params.EndDate
+                : endDate?.toISOString().split("T")[0]
+            }
+            onChange={(e) => {
+              const selectedDate = new Date(e.target.value);
+              setEndDate(selectedDate);
             }}
-            defaultValue={params.EndDate || ""}
-            render={({ field }) => (
-              <>
-                <TextField
-                  type="date"
-                  required
-                  placeholder="End Date"
-                  inputProps={{
-                    min: StartDate || new Date().toISOString().split("T")[0],
-                  }}
-                  value={field.value}
-                  onChange={(e) => {
-                    setEndDate(e.target.value);
-                    field.onChange(e);
-                  }}
-                />
-                {errors.EndDate && (
-                  <p className="error-message">End Date is needed</p>
-                )}
-              </>
-            )}
           />
           <br />
           <br />
@@ -199,7 +184,7 @@ function EditVacation(): JSX.Element {
             {...register("Price", {
               required: true,
             })}
-            value={currentPrice}
+            defaultValue={Price}
           />
           {errors.Price?.type === "required" && (
             <p className="error-message">Price is needed</p>
@@ -217,7 +202,6 @@ function EditVacation(): JSX.Element {
             <Button color="primary" type="submit">
               Add Vacation
             </Button>
-
             <Button color="secondary" onClick={() => navigate("/AdminPage")}>
               Cancel
             </Button>
