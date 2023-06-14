@@ -56,12 +56,7 @@ function SingleVacation(props: VacationProps): JSX.Element {
               size="small"
               onClick={() =>
                 navigate(`/EditVacation/
-                ${props.vacationData.Description}/
-                ${props.vacationData.Destination}/
-                ${props.vacationData.Img}/
-                ${props.vacationData.StartDate}/
-                ${props.vacationData.EndDate}/
-                ${props.vacationData.Price}
+                ${props.vacationData.VacationCode}/
                 `)}
             >
               Edit Vacation

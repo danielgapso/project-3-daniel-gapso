@@ -142,8 +142,14 @@ const DeleteVacation = (VacationCode: number) => {
     return true;
 };
 
-
-
+const getVacationByCode = async (vacationCode: number) => {
+    const SQLcommand = `SELECT * FROM vacations WHERE VacationCode = ${vacationCode}`;
+    console.log("sql>", SQLcommand);
+    const result = await dal_mysql.execute(SQLcommand);
+    console.log("result", result);
+    return result.length > 0 ? result[0] : null;
+  };
+  
 export default {
     AddUser,
     getUser,
@@ -157,4 +163,5 @@ export default {
     createVacationsTable,
     CreateFollowersTable,
     getUserByEmail,
+    getVacationByCode
 };

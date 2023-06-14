@@ -55,4 +55,18 @@ VacationsRouter.put(
   }
 );
 
+VacationsRouter.get(
+  "/GetVacation/:VacationCode",
+  async (request: Request, response: Response, next: NextFunction) => {
+    const vacationCode = +request.params.VacationCode;
+    const vacation = await MySqlLogic.getVacationByCode(vacationCode);
+    if (vacation) {
+      response.status(200).json(vacation);
+    } else {
+      response.status(404).json({ error: "Vacation not found" });
+    }
+  }
+);
+
+
 export default VacationsRouter;

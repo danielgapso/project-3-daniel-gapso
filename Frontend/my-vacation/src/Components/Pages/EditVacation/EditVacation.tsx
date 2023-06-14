@@ -15,28 +15,62 @@ function EditVacation(): JSX.Element {
     handleSubmit,
     formState: { errors },
     control,
-  } = useForm<VacationFormValues>();
+    setValue, // Add the setValue function from react-hook-form
+  } = useForm<VacationFormValues>({
+    defaultValues: {
+      Destination: "", // Set the default values to empty strings
+      Description: "",
+      StartDate: "",
+      EndDate: "",
+      Price: 0,
+      Img: null,
+    },
+  });
 
-  type VacationFormValues = {
+  interface VacationFormValues {
     Destination: string;
     Description: string;
     StartDate: string;
     EndDate: string;
     Price: number;
     Img: File | null;
-  };
+  }
+  
 
-  const [vacationData, setVacationData] = useState<Vacation>();
-  const [Destination, setDestination] = useState(params.Destination);
-  const [Description, setDescription] = useState(params.Description);
-  const [Img, setImg] = useState(params.Img);
-  const [Price, setPrice] = useState(params.Price);
+  const [Destination, setDestination] = useState("");
+  const [Description, setDescription] = useState("");
+  const [Img, setImg] = useState("");
+  const [Price, setPrice] = useState(0);
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
 
   const onSubmit = (data: VacationFormValues) => {
     AddEditVacation(data);
   };
+
+  useEffect(() => {
+    axios
+      .get(`http://localhost:4000/api/v1/vacations/GetVacation/${params.VacationCode}`)
+      .then((response) => {
+        const vacation = response.data; // Assuming the response data is an object representing a vacation
+
+        // Set the form field values using the setValue function
+        setValue("Destination", vacation.Destination);
+        setValue("Description", vacation.Description);
+        setValue("StartDate", vacation.StartDate);
+        setValue("EndDate", vacation.EndDate);
+        setValue("Price", vacation.Price);
+        // Note: The Img field is not directly supported by setValue, you may need to handle it separately
+
+        setStartDate(new Date(vacation.StartDate));
+        setEndDate(new Date(vacation.EndDate));
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [params.VacationCode, setValue]);
+
+  
 
   const AddEditVacation = (data: VacationFormValues) => {
     const formData = new FormData();
@@ -63,7 +97,6 @@ function EditVacation(): JSX.Element {
       });
   };
 
-
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files && e.target.files[0];
     if (file) {
@@ -75,9 +108,7 @@ function EditVacation(): JSX.Element {
       reader.readAsDataURL(file);
     }
   };
-
-  console.log(startDate, endDate);
-
+  
   return (
     <div className="EditVacation">
       <div className="box">
@@ -110,24 +141,23 @@ function EditVacation(): JSX.Element {
           )}
           <br />
           <br />
-
-        <TextField
-  type="date"
-  required
-  placeholder="Start Date"
-  inputProps={{
-    min: new Date().toISOString().split("T")[0],
-  }}
-  {...register("StartDate", { required: true })}
-  defaultValue={params.StartDate || ""}
-  onChange={(e) => {
-    const selectedDate = new Date(e.target.value);
-    setStartDate(selectedDate);
-    if (endDate && selectedDate > endDate) {
-      setEndDate(null);
-    }
-  }}
-/>
+          <TextField
+            type="date"
+            required
+            label="Start Date"
+            inputProps={{
+              min: new Date().toISOString().split("T")[0],
+            }}
+            {...register("StartDate", { required: true })}
+            defaultValue={params.StartDate || ""}
+            onChange={(e) => {
+              const selectedDate = new Date(e.target.value);
+              setStartDate(selectedDate);
+              if (endDate && selectedDate > endDate) {
+                setEndDate(null);
+              }
+            }}
+          />
           {errors.StartDate && (
             <p className="error-message">Start Date is needed</p>
           )}
@@ -136,7 +166,7 @@ function EditVacation(): JSX.Element {
           <TextField
             type="date"
             required
-            placeholder="End Date"
+            label="End Date"
             inputProps={{
               min: startDate
                 ? startDate.toISOString().split("T")[0]
@@ -167,6 +197,7 @@ function EditVacation(): JSX.Element {
           <TextField
             type="number"
             required
+            label="price"
             inputProps={{
               min: 0,
               max: 10000,
@@ -200,7 +231,7 @@ function EditVacation(): JSX.Element {
             aria-label="vertical outlined button group"
           >
             <Button color="primary" type="submit">
-              Add Vacation
+              Update Vacation
             </Button>
             <Button color="secondary" onClick={() => navigate("/AdminPage")}>
               Cancel
