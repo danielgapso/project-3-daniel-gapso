@@ -35,7 +35,6 @@ function EditVacation(): JSX.Element {
     Price: number;
     Img: File | null;
   }
-  
 
   const [Destination, setDestination] = useState("");
   const [Description, setDescription] = useState("");
@@ -50,7 +49,9 @@ function EditVacation(): JSX.Element {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:4000/api/v1/vacations/GetVacation/${params.VacationCode}`)
+      .get(
+        `http://localhost:4000/api/v1/vacations/GetVacation/${params.VacationCode}`
+      )
       .then((response) => {
         const vacation = response.data; // Assuming the response data is an object representing a vacation
 
@@ -69,8 +70,6 @@ function EditVacation(): JSX.Element {
         console.log(error);
       });
   }, [params.VacationCode, setValue]);
-
-  
 
   const AddEditVacation = (data: VacationFormValues) => {
     const formData = new FormData();
@@ -108,7 +107,7 @@ function EditVacation(): JSX.Element {
       reader.readAsDataURL(file);
     }
   };
-  
+
   return (
     <div className="EditVacation">
       <div className="box">
