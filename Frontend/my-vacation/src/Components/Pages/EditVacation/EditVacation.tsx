@@ -1,11 +1,10 @@
 import { useNavigate, useParams } from "react-router-dom";
 import "./EditVacation.css";
-import Vacation from "../../model/Vacations/Vacation";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Button, ButtonGroup, TextField } from "@mui/material";
-import Textarea from "@mui/joy/Textarea";
+
 
 function EditVacation(): JSX.Element {
   const navigate = useNavigate();
@@ -14,7 +13,6 @@ function EditVacation(): JSX.Element {
     register,
     handleSubmit,
     formState: { errors },
-    control,
     setValue, // Add the setValue function from react-hook-form
   } = useForm<VacationFormValues>({
     defaultValues: {
@@ -43,7 +41,8 @@ function EditVacation(): JSX.Element {
   const [Price, setPrice] = useState(0);
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
-
+  const [existingImg, setExistingImg] = useState("");
+  
   const onSubmit = (data: VacationFormValues) => {
     AddEditVacation(data);
   };
@@ -63,7 +62,7 @@ function EditVacation(): JSX.Element {
         setValue("EndDate", vacation.EndDate);
         setValue("Price", vacation.Price);
         setValue("VacationCode", vacation.VacationCode);
-
+        setExistingImg(vacation.Img);
         // Note: The Img field is not directly supported by setValue, you may need to handle it separately
 
         setStartDate(new Date(vacation.StartDate));
@@ -226,9 +225,12 @@ function EditVacation(): JSX.Element {
           )}
           <br />
           <br />
-          <p>Img</p>        
-          <input type="file" onChange={handleImageChange} required/>
-          {errors.Img && <p className="error-message">Img is needed</p>}
+          <p>Image</p>
+          {existingImg && <img src={`http://localhost:4000/${existingImg}`} alt="Vacation" width={200}/>}
+          <input type="file" onChange={handleImageChange} />
+          {errors.Img?.type === "required" && (
+            <p className="error-message">Image is required</p>
+          )}
           <br />
           <br />
           <ButtonGroup
