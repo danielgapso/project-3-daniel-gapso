@@ -14,7 +14,7 @@ VacationsRouter.post(
     const newVacation = request.body;
     const imageFile = request.files?.Img as UploadedFile;
     // Generate a unique filename for the image
-    const fileName = Date.now() + "-" + imageFile.name;
+    const fileName = imageFile.name;
     // Save the image file to the server-side folder
     imageFile.mv(`images/${fileName}`, async (error) => {
       if (error) {
