@@ -28,6 +28,7 @@ function EditVacation(): JSX.Element {
   });
 
   interface VacationFormValues {
+    VacationCode:string
     Destination: string;
     Description: string;
     StartDate: string;
@@ -38,7 +39,7 @@ function EditVacation(): JSX.Element {
 
   const [Destination, setDestination] = useState("");
   const [Description, setDescription] = useState("");
-  const [Img, setImg] = useState("");
+  const [Img, setImg] = useState<File | null>(null);
   const [Price, setPrice] = useState(0);
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
@@ -61,6 +62,8 @@ function EditVacation(): JSX.Element {
         setValue("StartDate", vacation.StartDate);
         setValue("EndDate", vacation.EndDate);
         setValue("Price", vacation.Price);
+        setValue("VacationCode", vacation.VacationCode);
+
         // Note: The Img field is not directly supported by setValue, you may need to handle it separately
 
         setStartDate(new Date(vacation.StartDate));
@@ -78,14 +81,15 @@ function EditVacation(): JSX.Element {
     formData.append("StartDate", data.StartDate);
     formData.append("EndDate", data.EndDate);
     formData.append("Price", data.Price.toString());
+    formData.append("VacationCode", data.VacationCode)
     if (Img) {
       formData.append("Img", Img);
     }
-
-    axios
-      .put("http://localhost:4000/api/v1/vacations/UpdateVacation", formData, {
+  
+    axios   
+      .put(`http://localhost:4000/api/v1/vacations/UpdateVacation/${params.VacationCode}`, formData, {
         headers: {
-          "Content-Type": "multipart/form-data",
+          "Content-Type": "application/json", // Set the content type to JSON
         },
       })
       .then((res) => {
@@ -95,16 +99,12 @@ function EditVacation(): JSX.Element {
         console.log(error);
       });
   };
+  
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files && e.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const imageDataUrl = reader.result as string;
-        setImg(imageDataUrl);
-      };
-      reader.readAsDataURL(file);
+      setImg(file);
     }
   };
 
@@ -223,7 +223,7 @@ function EditVacation(): JSX.Element {
           <br />
           <br />
           <p>Img</p>        
-          <input type="file" onChange={handleImageChange} required />
+          <input type="file" onChange={handleImageChange} required/>
           {errors.Img && <p className="error-message">Img is needed</p>}
           <br />
           <br />

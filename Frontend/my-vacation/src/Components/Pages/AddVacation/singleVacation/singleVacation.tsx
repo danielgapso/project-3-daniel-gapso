@@ -4,8 +4,6 @@ import Vacation from "../../../model/Vacations/Vacation";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useState } from "react";
-
-import * as React from 'react';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';

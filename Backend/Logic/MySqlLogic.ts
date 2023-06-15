@@ -117,7 +117,7 @@ const AddVacation = async (NewVacation: Vacation) => {
     return SQLcommand;
 };
 
-const UpdateVacation = async (Vacation: Vacation) => {
+const UpdateVacation = async (vacationCode: number,Vacation: Vacation) => {
     const SQLcommands = `
     UPDATE
     vacations.vacations
