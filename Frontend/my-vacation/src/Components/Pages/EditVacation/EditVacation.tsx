@@ -86,19 +86,23 @@ function EditVacation(): JSX.Element {
       formData.append("Img", Img);
     }
   
-    axios   
-      .put(`http://localhost:4000/api/v1/vacations/UpdateVacation/${params.VacationCode}`, formData, {
+    axios
+    .put(
+      `http://localhost:4000/api/v1/vacations/UpdateVacation/${params.VacationCode}`,
+      formData,
+      {
         headers: {
-          "Content-Type": "application/json", // Set the content type to JSON
+          "Content-Type": "multipart/form-data",
         },
-      })
-      .then((res) => {
-        navigate("/AdminPage");
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
+      }
+    )
+    .then((res) => {
+      navigate("/AdminPage");
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
   
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {

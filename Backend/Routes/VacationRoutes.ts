@@ -4,6 +4,7 @@ import MySqlLogic from "../Logic/MySqlLogic";
 import fileUpload, { UploadedFile } from "express-fileupload";
 import dal_mysql from "../Utils/dal_mysql";
 import fs from "fs";
+import Vacation from "../Models/Vacations/Vacation";
 
 const VacationsRouter = express.Router();
 
@@ -48,44 +49,21 @@ VacationsRouter.put(
   "/UpdateVacation/:VacationCode",
   async (request: Request, response: Response, next: NextFunction) => {
     const vacationCode = +request.params.VacationCode;
-    const updatedVacation = request.body;
-
-    // Check if a new image file is uploaded
+    const updatedVacation: Vacation = request.body;
     if (request.files && request.files.Img) {
-      const imageFile = request.files.Img as UploadedFile;
-      const fileName = Date.now() + "-" + imageFile.name;
-
-      // Move the uploaded file to the images folder
-      imageFile.mv(`images/${fileName}`, (error) => {
+      const imgFile = request.files.Img as UploadedFile;
+      const imgPath = `${imgFile.name}`;
+      if (updatedVacation.Img) {
+      }
+      updatedVacation.Img = imgPath;
+      imgFile.mv(`images/${imgPath}`, (error) => {
         if (error) {
-          console.log(error);
-          return response.status(500).json({ error: "Failed to upload image" });
+          console.error("Error saving new image:", error);
         }
-
-        // Update the Img field with the new filename
-        updatedVacation.Img = fileName;
-
-        // Perform the database operation to update the vacation
-        MySqlLogic.UpdateVacation(vacationCode, updatedVacation)
-          .then(() => {
-            response.status(200).json({ message: "Vacation updated successfully" });
-          })
-          .catch((error) => {
-            console.log(error);
-            response.status(500).json({ error: "Failed to update vacation" });
-          });
       });
-    } else {
-      // No new image file uploaded, proceed with updating other fields
-      MySqlLogic.UpdateVacation(vacationCode, updatedVacation)
-        .then(() => {
-          response.status(200).json({ message: "Vacation updated successfully" });
-        })
-        .catch((error) => {
-          console.log(error);
-          response.status(500).json({ error: "Failed to update vacation" });
-        });
     }
+    await MySqlLogic.UpdateVacation(vacationCode, updatedVacation);
+    response.status(202).json({ message: "Vacation updated successfully" });
   }
 );
 
