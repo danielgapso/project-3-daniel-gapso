@@ -113,10 +113,11 @@ function EditVacation(): JSX.Element {
       <div className="box">
         <h2>Edit Vacation</h2>
         <form onSubmit={handleSubmit(onSubmit)}>
+          <br />
+          <p>Destination</p>
           <TextField
             type="text"
             required
-            label="Destination"
             {...register("Destination", {
               required: true,
             })}
@@ -127,8 +128,8 @@ function EditVacation(): JSX.Element {
           )}
           <br />
           <br />
+          <p>Description</p>
           <TextField
-            label="Description"
             required
             {...register("Description", {
               required: true,
@@ -140,10 +141,10 @@ function EditVacation(): JSX.Element {
           )}
           <br />
           <br />
+          <p>Start Date</p>
           <TextField
             type="date"
             required
-            label="Start Date"
             inputProps={{
               min: new Date().toISOString().split("T")[0],
             }}
@@ -162,10 +163,10 @@ function EditVacation(): JSX.Element {
           )}
           <br />
           <br />
+          <p>End Date</p>
           <TextField
             type="date"
             required
-            label="End Date"
             inputProps={{
               min: startDate
                 ? startDate.toISOString().split("T")[0]
@@ -221,6 +222,7 @@ function EditVacation(): JSX.Element {
           )}
           <br />
           <br />
+          <p>Img</p>        
           <input type="file" onChange={handleImageChange} required />
           {errors.Img && <p className="error-message">Img is needed</p>}
           <br />
