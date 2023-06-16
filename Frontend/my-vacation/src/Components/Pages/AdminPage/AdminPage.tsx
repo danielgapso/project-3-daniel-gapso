@@ -47,10 +47,11 @@ function AdminPage(): JSX.Element {
   return (
     <div className="AdminPage">
       <button onClick={() => navigate(`/addVacation`)}>Add New Vacation</button>
-      <div className="container"></div>
+      <div className="container">
       {currentItems.map((item) => (
         <SingleVacation key={item.VacationCode} vacationData={item} />
       ))}
+      </div>
       <ul className="pagination">
         {Array.from({ length: Math.ceil(localVacations.length / itemsPerPage) }).map((_, index) => {
           const pageNumber = index + 1;
