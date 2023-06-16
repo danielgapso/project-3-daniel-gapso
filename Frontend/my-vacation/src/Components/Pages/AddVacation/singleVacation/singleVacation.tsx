@@ -25,8 +25,7 @@ function SingleVacation(props: VacationProps): JSX.Element {
     );
     setShowModal(false);
   };
-
-  console.log(props.vacationData.Img);
+  
   return (
     <div className="singleVacation">
       <div className="container">

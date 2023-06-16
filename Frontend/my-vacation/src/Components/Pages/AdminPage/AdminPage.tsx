@@ -6,6 +6,7 @@ import Vacation from "../../model/Vacations/Vacation";
 import { useNavigate } from "react-router-dom";
 import { downloadVacationAction } from "../../redux/VacationReducer";
 import { vacations } from "../../redux/VacationStore";
+import Button from '@mui/material/Button';
 
 function AdminPage(): JSX.Element {
   const navigate = useNavigate();
@@ -46,7 +47,7 @@ function AdminPage(): JSX.Element {
 
   return (
     <div className="AdminPage">
-      <button onClick={() => navigate(`/addVacation`)}>Add New Vacation</button>
+      <Button onClick={() => navigate(`/addVacation`)} id="addBtn">Add New Vacation</Button>
       <div className="container">
       {currentItems.map((item) => (
         <SingleVacation key={item.VacationCode} vacationData={item} />

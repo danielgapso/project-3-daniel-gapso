@@ -8,3 +8,7 @@
     margin: auto;
     justify-content: space-between;
 }
+
+#addBtn{
+    margin-bottom: 10px;
+}

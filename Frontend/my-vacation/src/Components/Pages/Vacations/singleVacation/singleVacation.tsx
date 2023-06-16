@@ -19,9 +19,6 @@ function SingleVacation(props: VacationProps): JSX.Element {
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
 
- 
- 
-
   return (
     <div className="singleVacation">
       <div className="container">
@@ -45,12 +42,9 @@ function SingleVacation(props: VacationProps): JSX.Element {
             </Typography>
           </CardContent>
           <CardActions>
-            
-               💖 like
-           
 
-              
-    
+               💖 like
+          
           </CardActions>
         </Card>
       </div>
