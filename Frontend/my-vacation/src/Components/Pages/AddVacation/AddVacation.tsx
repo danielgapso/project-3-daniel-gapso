@@ -2,7 +2,6 @@ import axios from "axios";
 import { Controller, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Vacation from "../../model/Vacations/Vacation";
 import { Button, ButtonGroup, TextField } from "@mui/material";
 
 function AddVacation() {

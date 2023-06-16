@@ -37,7 +37,7 @@ function Register(): JSX.Element {
     formData.append("UserLastName", data.UserLastName);
     formData.append("UserEmail", data.UserEmail);
     formData.append("UserPassword", data.UserPassword);
-
+    formData.append("isAdmin", "0");
     axios
       .post("http://localhost:4000/api/v1/users/register", formData)
       .then((res) => {

@@ -4,15 +4,17 @@ class User {
     public UserLastName: string;
     public UserEmail: string;
     public UserCode: string;
+    public isAdmin: boolean;
 
     constructor(UserFirstName: string, UserPassword: string, 
-        UserLastName: string , UserEmail: string, UserCode: string ) {
+        UserLastName: string , UserEmail: string, UserCode: string ,isAdmin: boolean) {
 
         this.UserFirstName = UserFirstName;
         this.UserPassword = UserPassword;
         this.UserLastName = UserLastName;
         this.UserEmail = UserEmail;
         this.UserCode = UserCode;
+        this.isAdmin = isAdmin;
     }
     
 }

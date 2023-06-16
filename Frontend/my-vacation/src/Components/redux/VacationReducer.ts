@@ -10,7 +10,7 @@ export enum vacationActionType {
     addVacation = "addVacation",
     deleteVacation = "deleteVacation",
     editVacation = "editVacation",
-    downloadVacation = "downloaVacation"
+    downloadVacation = "downloadVacation"
 }
 
 //action data structure

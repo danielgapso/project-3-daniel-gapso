@@ -1,5 +1,7 @@
 .Vacations {
-	
+	margin: auto;
+	height: 100%;
+    
 }
 .VacationCard{
     border: 1px solid black;

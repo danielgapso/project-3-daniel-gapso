@@ -8,13 +8,15 @@ loginRouter.post("/login", async (request: Request, response: Response, next: Ne
 
   // Perform the logic to check if the user exists in the MySQL database
   const user = await MySqlLogic.getUserByEmail(UserEmail);
-
   if (user && user.UserPassword === UserPassword) {
-    response.status(200).json({ success: true, message: "Login successful" });
+    const isAdmin = user.isAdmin === 1; 
+    response.status(200).json({ success: true, message: "Login successful", isAdmin });
   } else {
     response.status(401).json({ success: false, message: "Invalid email or password" });
   }
 });
+
+
 
 
 loginRouter.post(

@@ -9,7 +9,7 @@ import axios from "axios";
 function Login(): JSX.Element {
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState("");
-
+  
   const {
     register,
     handleSubmit,
@@ -24,15 +24,21 @@ function Login(): JSX.Element {
         data
       );
       const result = response.data;
+
       console.log("Response:", result); // Log the response
       if (result.success) {
-        // Check if email is adminmail@admin.com and password is admin
-        if (data.UserEmail === 'adminmail@admin.com' && data.UserPassword === 'admin') {
+       
+        console.log("isAdmin:", result.isAdmin);
+        if (result.isAdmin === true) { // Assuming 1 represents admin status
           navigate("/AdminPage");
         } else {
           navigate("/Vacations");
         }
-      } else {
+      }
+      
+      
+  
+       else {
         // User does not exist, display the error message
         setErrorMessage(result.message);
         console.log("Response:", result.message);
@@ -47,7 +53,6 @@ function Login(): JSX.Element {
     }
   };
   
-  
   const onLoginClick = () => {
     if (Object.keys(errors).length > 0) {
       // If there are errors, don't login
@@ -59,6 +64,7 @@ function Login(): JSX.Element {
       handleSubmit(onSubmit)();
     }
   };
+  
 
 
   return (

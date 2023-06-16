@@ -14,9 +14,12 @@ const CreateUsersTable = () => {
         UserLastName VARCHAR(45) NOT NULL,
         UserPassword VARCHAR(45) NOT NULL,
         UserEmail VARCHAR(45) NOT NULL,
-        PRIMARY KEY (UserCode));
-    `;
-    const response = dal_mysql.execute(SQLcommand);
+        isAdmin TINYINT NOT NULL,
+        PRIMARY KEY (UserCode)
+    );
+  `;
+
+  const response = dal_mysql.execute(SQLcommand);
 };
 
 const createVacationsTable = () => {
