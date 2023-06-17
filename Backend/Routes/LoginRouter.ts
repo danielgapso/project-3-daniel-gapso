@@ -16,9 +16,6 @@ loginRouter.post("/login", async (request: Request, response: Response, next: Ne
   }
 });
 
-
-
-
 loginRouter.post(
   "/register",
   async (request: Request, response: Response, next: NextFunction) => {

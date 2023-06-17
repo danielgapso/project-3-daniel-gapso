@@ -5,44 +5,48 @@ import User from "../../model/Roles/User";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { Provider, useDispatch } from "react-redux";
+import { isLoggedInAction , downloadUsersAction } from "../../redux/userReducer";
+import { vacations } from "../../redux/VacationStore";
+
 
 function Login(): JSX.Element {
+ 
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState("");
   
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<User>();
 
+  const dispatch = useDispatch();
+
   const onSubmit = async (data: User) => {
-    console.log(data);
     try {
       const response = await axios.post(
         "http://localhost:4000/api/v1/users/login",
         data
       );
       const result = response.data;
-
-      console.log("Response:", result); // Log the response
+      dispatch(isLoggedInAction(true));
       if (result.success) {
-       
-        console.log("isAdmin:", result.isAdmin);
-        if (result.isAdmin === true) { // Assuming 1 represents admin status
-          navigate("/AdminPage");
-        } else {
-          navigate("/Vacations");
+        
+      
+      if (result.isAdmin === true) { 
+        navigate("/AdminPage");
+      } else {
+         navigate("/Vacations");
         }
       }
-      
-      
-  
        else {
         // User does not exist, display the error message
         setErrorMessage(result.message);
         console.log("Response:", result.message);
       }
+      navigate("/Vacations");
     } catch (error: any) {
       console.error("Error:", error);
       if (error.response?.status === 401) {
@@ -65,10 +69,9 @@ function Login(): JSX.Element {
     }
   };
   
-
-
   return (
-    <div className="Login">
+     <Provider store={vacations}>
+    <div className="Login">     
       <div className="box">
         <h2>Please Login</h2>
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -122,6 +125,7 @@ function Login(): JSX.Element {
         </form>
       </div>
     </div>
+    </Provider>
   );
 }
 

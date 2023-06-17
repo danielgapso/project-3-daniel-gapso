@@ -4,13 +4,17 @@ import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 import MainLayout from "./Components/Layout/MainLayout/MainLayout";
 import { BrowserRouter } from "react-router-dom";
+import { Provider } from "react-redux";
+import { vacations } from "./Components/redux/VacationStore";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 root.render(
   <BrowserRouter>
-    <MainLayout />
+    <Provider store={vacations}>
+      <MainLayout />
+    </Provider>
   </BrowserRouter>
 );
 
