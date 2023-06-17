@@ -6,3 +6,11 @@
 .VacationCard{
     border: 1px solid black;
 }
+
+.container {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    margin: auto;
+    justify-content: space-between;
+}

@@ -48,9 +48,11 @@ const paginate = (pageNumber: number) => {
 
   return (
     <div className="Vacations">
+       <div className="container">
       {currentItems.map((item) => (
         <SingleVacation key={item.VacationCode} vacationData={item} />
       ))}
+      </div>
       <nav>
       <ul className="pagination">
   {Array.from({ length: Math.ceil(localVacations.length / itemsPerPage) }).map((_, index) => {
