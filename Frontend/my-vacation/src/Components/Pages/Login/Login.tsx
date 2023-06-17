@@ -5,24 +5,19 @@ import User from "../../model/Roles/User";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { Provider, useDispatch } from "react-redux";
-import { isLoggedInAction , downloadUsersAction } from "../../redux/userReducer";
-import { vacations } from "../../redux/VacationStore";
-
+import { useDispatch } from "react-redux";
+import { isLoggedInAction } from "../../redux/userReducer";
 
 function Login(): JSX.Element {
- 
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState("");
-  
+  const dispatch = useDispatch();
 
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<User>();
-
-  const dispatch = useDispatch();
 
   const onSubmit = async (data: User) => {
     try {
@@ -33,20 +28,16 @@ function Login(): JSX.Element {
       const result = response.data;
       dispatch(isLoggedInAction(true));
       if (result.success) {
-        
-      
-      if (result.isAdmin === true) { 
-        navigate("/AdminPage");
-      } else {
-         navigate("/Vacations");
+        if (result.isAdmin === true) {
+          navigate("/AdminPage");
+        } else {
+          navigate("/Vacations");
         }
-      }
-       else {
+      } else {
         // User does not exist, display the error message
         setErrorMessage(result.message);
         console.log("Response:", result.message);
       }
-      navigate("/Vacations");
     } catch (error: any) {
       console.error("Error:", error);
       if (error.response?.status === 401) {
@@ -70,7 +61,6 @@ function Login(): JSX.Element {
   };
   
   return (
-     <Provider store={vacations}>
     <div className="Login">     
       <div className="box">
         <h2>Please Login</h2>
@@ -106,7 +96,6 @@ function Login(): JSX.Element {
             </p>
           )}
           {errorMessage && <p className="error-message">{errorMessage}</p>}
-
           <br />
           <br />
           <ButtonGroup
@@ -125,7 +114,6 @@ function Login(): JSX.Element {
         </form>
       </div>
     </div>
-    </Provider>
   );
 }
 
