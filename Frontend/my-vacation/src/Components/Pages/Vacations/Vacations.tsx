@@ -7,6 +7,9 @@ import { useNavigate } from "react-router-dom";
 import { downloadVacationAction } from "../../redux/VacationReducer";
 import { vacations } from "../../redux/VacationStore";
 import Button from '@mui/material/Button';
+import { userIsAdmin } from "../../Utils/authenticatin"
+import { isLoggedInAction } from '../../redux/userReducer';
+import { useDispatch } from "react-redux";
 
 function Vacations(): JSX.Element {
   const navigate = useNavigate();
@@ -14,6 +17,20 @@ function Vacations(): JSX.Element {
   const [refresh, setRefresh] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10); // Number of items to display per page
+  const isAdmin = userIsAdmin();
+  const dispatch = useDispatch();
+  
+  dispatch(isLoggedInAction(true));
+
+  const renderAddButton = () => {
+    if (isAdmin) {
+      return (
+        <Button onClick={() => navigate(`/addVacation`)} id="addBtn">Add New Vacation</Button>
+      );
+    }
+    return null;
+  };
+
 
   useEffect(() => {
     if (vacations.getState().allVacations.allVacations.length < 1) {
@@ -47,7 +64,7 @@ function Vacations(): JSX.Element {
 
   return (
     <div className="Vacations">
-      <Button onClick={() => navigate(`/addVacation`)} id="addBtn">Add New Vacation</Button>
+     {renderAddButton()}
       <div className="container">
       {currentItems.map((item) => (
         <SingleVacation key={item.VacationCode} vacationData={item} />

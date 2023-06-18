@@ -15,7 +15,6 @@ const PrivateRoutes = () => {
 const AdminRoutes = () => {
   const { userLogged, user } = userAuth();
   if (userLogged === true) {
-    console.log("is admin", !!user.isAdmin);
     return user.isAdmin ? <Outlet /> : <Navigate to="/Vacations" />;
   } else {
     return <Navigate to="/Login" />;

@@ -1,10 +1,8 @@
 import Vacation from "../model/Vacations/Vacation";
 
-
 export class VacationState {
     public allVacations: Vacation[] = [];
 }
-
 
 export enum vacationActionType {
     addVacation = "addVacation",
