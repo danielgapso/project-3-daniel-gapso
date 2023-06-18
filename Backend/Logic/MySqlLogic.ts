@@ -19,7 +19,7 @@ const CreateUsersTable = () => {
     );
   `;
 
-  const response = dal_mysql.execute(SQLcommand);
+    const response = dal_mysql.execute(SQLcommand);
 };
 
 const createVacationsTable = () => {
@@ -49,21 +49,35 @@ const CreateFollowersTable = () => {
     const response = dal_mysql.execute(SQLcommand);
 };
 
-
-//user
-const getUser = async (UserCode:number) => {
-    const SQLcommand = `SELECT * FROM users WHERE usercode = ${UserCode}`;
-    console.log("sql>", SQLcommand);
-    return await dal_mysql.execute(SQLcommand);
+const getUser = async (UserEmail: string, UserPassword: string) => {
+    const user = await getUserByEmail(UserEmail);
+    if (!user) {
+        console.log("invalid")
+    }
+    try{
+        const userPass = UserPassword==user.UserPassword;
+        if(!UserPassword) {
+            console.log("invalid pass")
+        }
+        return user;
+    }
+    catch {console.error();
+    }
 };
+// user
+// const getUser = async (UserEmail:string , UserPassword:string) => {
+//    const SQLcommand = `SELECT * FROM users WHERE usercode = ${UserCode}`;
+//    console.log("sql>", SQLcommand);
+//    return await dal_mysql.execute(SQLcommand);
+// };
 
 const AddUser = async (NewUser: User) => {
     const { UserFirstName, UserLastName, UserPassword, UserEmail } = NewUser;
     // Check if the email already exists
     const existingUser = await getUserByEmail(UserEmail);
     if (existingUser) {
-      // Return an error message instead of throwing an error
-      return "Email already exists in the database";
+        // Return an error message instead of throwing an error
+        return "Email already exists in the database";
     }
     const SQLcommand = `
       INSERT INTO vacations.users 
@@ -75,8 +89,8 @@ const AddUser = async (NewUser: User) => {
     const UserCode = response.insertId;
     console.log("New Id", UserCode, " Message:", response.message);
     return UserCode;
-  };
-  
+};
+
 const GetAllVacations = async () => {
     const SQLcommand = `SELECT * FROM vacations.vacations`;
     console.log("sql>", SQLcommand);
@@ -89,7 +103,7 @@ const getUserByEmail = async (email: string) => {
     const result = await dal_mysql.execute(SQLcommand);
     console.log("result", result);
     return result.length > 0 ? result[0] : null;
-  };
+};
 
 const FollowVacation = async (Vacation: Vacation) => {
 
@@ -120,7 +134,7 @@ const AddVacation = async (NewVacation: Vacation) => {
     return SQLcommand;
 };
 
-const UpdateVacation = async (vacationCode: number,Vacation: Vacation) => {
+const UpdateVacation = async (vacationCode: number, Vacation: Vacation) => {
     const SQLcommands = `
     UPDATE
     vacations.vacations
@@ -151,8 +165,8 @@ const getVacationByCode = async (vacationCode: number) => {
     const result = await dal_mysql.execute(SQLcommand);
     console.log("result", result);
     return result.length > 0 ? result[0] : null;
-  };
-  
+};
+
 export default {
     AddUser,
     getUser,

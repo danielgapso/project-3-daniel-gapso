@@ -203,7 +203,7 @@ function AddVacation() {
               Add Vacation
             </Button>
 
-            <Button color="secondary" onClick={() => navigate("/AdminPage")}>
+            <Button color="secondary" onClick={() => navigate("/Vacations")}>
               Cancel
             </Button>
           </ButtonGroup>

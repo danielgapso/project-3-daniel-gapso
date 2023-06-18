@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useDispatch } from "react-redux";
-import { isLoggedInAction } from "../../redux/userReducer";
+import { isLoggedInAction, downloadUsersAction } from "../../redux/userReducer";
 
 function Login(): JSX.Element {
   const navigate = useNavigate();
@@ -27,17 +27,8 @@ function Login(): JSX.Element {
       );
       const result = response.data;
       dispatch(isLoggedInAction(true));
-      if (result.success) {
-        if (result.isAdmin === true) {
-          navigate("/AdminPage");
-        } else {
-          navigate("/Vacations");
-        }
-      } else {
-        // User does not exist, display the error message
-        setErrorMessage(result.message);
-        console.log("Response:", result.message);
-      }
+      dispatch(downloadUsersAction([result.user]));
+      navigate("/Vacations");
     } catch (error: any) {
       console.error("Error:", error);
       if (error.response?.status === 401) {
@@ -47,7 +38,7 @@ function Login(): JSX.Element {
       }
     }
   };
-  
+
   const onLoginClick = () => {
     if (Object.keys(errors).length > 0) {
       // If there are errors, don't login
@@ -59,9 +50,9 @@ function Login(): JSX.Element {
       handleSubmit(onSubmit)();
     }
   };
-  
+
   return (
-    <div className="Login">     
+    <div className="Login">
       <div className="box">
         <h2>Please Login</h2>
         <form onSubmit={handleSubmit(onSubmit)}>

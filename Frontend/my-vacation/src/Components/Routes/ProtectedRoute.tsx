@@ -1,6 +1,4 @@
-import React from "react";
 import { Outlet, Navigate } from "react-router-dom";
-import { useSelector } from "react-redux";
 import { vacations } from "../redux/VacationStore";
 
 const userAuth = () => {
@@ -15,15 +13,15 @@ const PrivateRoutes = () => {
 };
 
 const AdminRoutes = () => {
-  const { userLogged } = userAuth();
-  const users = vacations.getState().allUsers.users;
-
+  const { userLogged, user } = userAuth();
   if (userLogged === true) {
-    const isAdmin = users[0]?.isAdmin;
-    return isAdmin ? <Outlet /> : <Navigate to="/AdminPage" />;
+    console.log("is admin", !!user.isAdmin);
+    return user.isAdmin ? <Outlet /> : <Navigate to="/Vacations" />;
   } else {
     return <Navigate to="/Login" />;
   }
 };
+
+
 
 export { PrivateRoutes, AdminRoutes };

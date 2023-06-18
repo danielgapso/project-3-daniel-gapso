@@ -51,10 +51,8 @@ function SingleVacation(props: VacationProps): JSX.Element {
           <CardActions>
             <Button
               size="small"
-              onClick={() =>
-                navigate(`/EditVacation/
-                ${props.vacationData.VacationCode}/
-                `)}
+              onClick={() => navigate(`/EditVacation/${props.vacationData.VacationCode}`)}
+
             >
               Edit Vacation
             </Button>

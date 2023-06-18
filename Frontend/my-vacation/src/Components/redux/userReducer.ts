@@ -39,7 +39,6 @@ export function usersReducer(
     action: UserAction
 ): UserState {
     const newState = { ...currentState };
-
     switch (action.type) {
         case UserActionType.addUser:
             newState.users = [...newState.users, action.payload]
