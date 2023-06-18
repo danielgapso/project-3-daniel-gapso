@@ -10,34 +10,20 @@ const userAuth = () => {
 };
 
 const PrivateRoutes = () => {
-  const { userLogged, user } = userAuth();
-
-  if (!userLogged) {
-    return <Navigate to="/" />;
-  }
-
- //  const isAdmin = user?.isAdmin;
- //  if (!isAdmin) {
-   //  return <Navigate to="/vacations" />;
-  // }
-
-  return <Outlet />;
+  const { userLogged } = userAuth();
+  return userLogged ? <Outlet /> : <Navigate to="/Login" />;
 };
 
 const AdminRoutes = () => {
-  const { userLogged, user } = userAuth();
+  const { userLogged } = userAuth();
+  const users = vacations.getState().allUsers.users;
 
-  if (!userLogged) {
+  if (userLogged === true) {
+    const isAdmin = users[0]?.isAdmin;
+    return isAdmin ? <Outlet /> : <Navigate to="/AdminPage" />;
+  } else {
     return <Navigate to="/Login" />;
   }
-
-  const isAdmin = user?.isAdmin;
-
-  if (!isAdmin) {
-    return <Navigate to="/Vacations" />;
-  }
-
-  return <Outlet />;
 };
 
 export { PrivateRoutes, AdminRoutes };
