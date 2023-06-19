@@ -15,7 +15,7 @@ likeRouter.post(
       const like = await MySqlLogic.toggleLike(UserCode, VacationCode);
       response.status(200).json({
         like: like,
-        message: "Like added successfully to vacation",
+        message: "Liked",
       });
     } catch (error) {
       response.status(500).json({ message: "we have an error" });
