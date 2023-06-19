@@ -15,7 +15,7 @@ const CreateUsersTable = () => {
         UserPassword VARCHAR(45) NOT NULL,
         UserEmail VARCHAR(45) NOT NULL,
         isAdmin TINYINT NOT NULL,
-        likedVacations JSON NOT NULL,
+        likedVacations JSON NULL,
         PRIMARY KEY (UserCode)
     );
   `;
@@ -83,8 +83,9 @@ const AddUser = async (NewUser: User) => {
     }
     const SQLcommand = `
       INSERT INTO vacations.users 
-      (UserFirstName, UserLastName, UserPassword, UserEmail) 
-      VALUES ('${UserFirstName}', '${UserLastName}', '${UserPassword}', '${UserEmail}');
+      (UserFirstName, UserLastName, UserPassword, UserEmail,likedVacations) 
+      VALUES ('${UserFirstName}', '${UserLastName}', '${UserPassword}', '${UserEmail}' ,'[ ]');
+
     `;
     console.log("sql>", SQLcommand);
     const response: OkPacket = await dal_mysql.execute(SQLcommand);
@@ -120,10 +121,14 @@ const toggleLike = async (UserCode: number, VacationCode: number) => {
       userSql,
       [UserCode]
     );
-    const currentLikedVacations: number[] = userResult[0].likedVacations
-      ? JSON.parse(userResult[0].likedVacations)
-      : [];
+    console.log("userResult", userResult);
+
+    const currentLikedVacations: number[] = userResult[0].likedVacations === 'null'
+    ? []
+    : JSON.parse(userResult[0].likedVacations);
   
+      console.log("currentLikedVacations", currentLikedVacations);
+
     if (currentLikedVacations.includes(VacationCode)) {
       // Remove the like
       console.log("Removing like from vacationId:", VacationCode);
@@ -165,9 +170,9 @@ const toggleLike = async (UserCode: number, VacationCode: number) => {
     }
   
     const updateLikedVacationsSql = `
-      UPDATE users
-      SET likedVacations = CAST ('?' AS JSON)
-      WHERE UserCode = ${UserCode}
+    UPDATE users
+    SET likedVacations = likedVacations
+    WHERE UserCode = ${UserCode}
     `;
     await dal_mysql.execute(updateLikedVacationsSql, [
       JSON.stringify(currentLikedVacations),
