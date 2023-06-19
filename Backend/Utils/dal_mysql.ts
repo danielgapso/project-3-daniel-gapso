@@ -8,7 +8,7 @@ const connection = mysql.createPool({
     database: config.mySQLdatabase,
 });
 
-const execute = (sql: string): Promise<any> => {
+const execute = (sql: string , params?: any): Promise<any> => {
     return new Promise<any>((resolve, reject) => {
         connection.query(sql, (err, res) => {
             if (err) {

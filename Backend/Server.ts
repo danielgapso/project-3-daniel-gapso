@@ -7,6 +7,7 @@ import VacationsRouter from "./Routes/VacationRoutes";
 import loginRouter from "./Routes/LoginRouter";
 import logic from "./Logic/MySqlLogic";
 import ErrorHandler from "./MiddleWare/route-not-found";
+import likeRouter from "./Routes/LikesRouter";
 const server = express();
 
 server.use(cors());
@@ -22,6 +23,9 @@ server.use(bodyParser.json());
 server.use("/api/v1/vacations", VacationsRouter);
 
 server.use("/api/v1/users", loginRouter);
+
+server.use("/api/v1/likes", likeRouter);
+
 
 console.log("check if table exists...");
 logic.CreateUsersTable();

@@ -3,11 +3,12 @@ class User {
    public UserPassword: string;
    public UserLastName: string;
    public UserEmail: string;
-   public UserCode: string;
+   public UserCode: number;
    public isAdmin: boolean;
+   public likedVacations: number[];
 
    constructor(UserFirstName: string, UserPassword: string, 
-       UserLastName: string , UserEmail: string, UserCode: string ,isAdmin: boolean) {
+       UserLastName: string , UserEmail: string, UserCode: number ,isAdmin: boolean ,likedVacations: number[]) {
 
        this.UserFirstName = UserFirstName;
        this.UserPassword = UserPassword;
@@ -15,6 +16,7 @@ class User {
        this.UserEmail = UserEmail;
        this.UserCode = UserCode;
        this.isAdmin = isAdmin;
+       this.likedVacations = likedVacations;
    }
    
 }

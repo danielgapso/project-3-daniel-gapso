@@ -15,6 +15,7 @@ const CreateUsersTable = () => {
         UserPassword VARCHAR(45) NOT NULL,
         UserEmail VARCHAR(45) NOT NULL,
         isAdmin TINYINT NOT NULL,
+        likedVacations JSON NOT NULL,
         PRIMARY KEY (UserCode)
     );
   `;
@@ -32,6 +33,7 @@ const createVacationsTable = () => {
         EndDate VARCHAR(45) NOT NULL,
         Price VARCHAR(45) NOT NULL,
         Img VARCHAR(256) NOT NULL,
+        likes VARCHAR(45) NOT NULL,
         PRIMARY KEY (VacationCode));
         `;
     const response = dal_mysql.execute(SQLcommand);
@@ -105,13 +107,94 @@ const getUserByEmail = async (email: string) => {
     return result.length > 0 ? result[0] : null;
 };
 
-const FollowVacation = async (Vacation: Vacation) => {
+//likes
 
-};
-
-const UnFollowVacation = async (Vacation: Vacation) => {
-
-};
+const toggleLike = async (UserCode: number, VacationCode: number) => {
+    const userSql = `
+      SELECT likedVacations
+      FROM users
+      WHERE UserCode = ?
+    `;
+    const userResult: { likedVacations: string }[] = await dal_mysql.execute(
+      userSql,
+      [UserCode]
+    );
+    const currentLikedVacations: number[] = userResult[0].likedVacations
+      ? JSON.parse(userResult[0].likedVacations)
+      : [];
+  
+    if (currentLikedVacations.includes(VacationCode)) {
+      // Remove the like
+      console.log("Removing like from vacationId:", VacationCode);
+      const index = currentLikedVacations.indexOf(VacationCode);
+      currentLikedVacations.splice(index, 1);
+  
+      const removeLikeSql = `
+        DELETE FROM followers
+        WHERE VacationCode = ? AND UserCode = ?
+      `;
+      await dal_mysql.execute(removeLikeSql, [VacationCode, UserCode]);
+  //?
+      const updateVacationSql = `
+        UPDATE vacations_list
+        SET likes = likes - 1
+        WHERE id = ?
+      `;
+      await dal_mysql.execute(updateVacationSql, [VacationCode]);
+    } else {
+      // Add the like
+      console.log("Adding like to vacationId:", VacationCode);
+  
+      currentLikedVacations.push(VacationCode);
+  
+      const addLikeSql = `
+        INSERT INTO followers (VacationCode, UserCode)
+        VALUES (?, ?)
+      `;
+      await dal_mysql.execute(addLikeSql, [VacationCode, UserCode]);
+  
+      const updateVacationSql = `
+        UPDATE vacations_list
+        SET likes = likes + 1
+        WHERE id = ?
+      `;
+      await dal_mysql.execute(updateVacationSql, [VacationCode]);
+    }
+  
+    const updateLikedVacationsSql = `
+      UPDATE users
+      SET likedVacations = ?
+      WHERE UserCode = ?
+    `;
+    await dal_mysql.execute(updateLikedVacationsSql, [
+      JSON.stringify(currentLikedVacations),
+      UserCode,
+    ]);
+  };
+  //stopped here 
+  const getLikesByUser = async (UserCode: number) => {
+    const sql = `
+    SELECT vacations.VacationCode
+    FROM vacations.followers
+    INNER JOIN vacations.vacations ON followers.VacationCode = vacations.VacationCode
+    WHERE followers.UserCode = ?  
+    `;
+  
+    console.log("SQL Query:", sql); // Log the SQL query
+  
+    const result: Vacation[] = await dal_mysql.execute(sql, [UserCode]);
+    return result;
+  };
+  
+  
+  const getLikesPerVacation = async () => {
+    const sql = `
+        SELECT destination, likes
+        FROM vacations.vacations
+      `;
+    const result: any = await dal_mysql.execute(sql);
+    return result;
+  };
 
 //admin 
 const AddVacation = async (NewVacation: Vacation) => {
@@ -171,8 +254,9 @@ export default {
     AddUser,
     getUser,
     GetAllVacations,
-    FollowVacation,
-    UnFollowVacation,
+    toggleLike,
+    getLikesByUser,
+    getLikesPerVacation,
     AddVacation,
     UpdateVacation,
     DeleteVacation,
