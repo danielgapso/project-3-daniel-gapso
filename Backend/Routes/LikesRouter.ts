@@ -9,16 +9,16 @@ const likeRouter = express.Router();
 likeRouter.post(
   "/addLike",
   async (request: Request, response: Response, next: NextFunction) => {
-    const userId = +request.body.userId;
-    const vacationId = +request.body.vacationId;
+    const UserCode = +request.body.UserCode;
+    const VacationCode = +request.body.VacationCode;
     try {
-      const like = await MySqlLogic.toggleLike(userId, vacationId);
+      const like = await MySqlLogic.toggleLike(UserCode, VacationCode);
       response.status(200).json({
         like: like,
         message: "Like added successfully to vacation",
       });
     } catch (error) {
-      response.status(500).json({ message: "Something went wrong" });
+      response.status(500).json({ message: "we have an error" });
     }
   }
 );

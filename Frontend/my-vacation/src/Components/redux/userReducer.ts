@@ -45,6 +45,7 @@ export function usersReducer(
             break;
         case UserActionType.downloadUsers:
             newState.users = action.payload;
+
             break;
         case UserActionType.isLoggedIn:
             newState.isLoggedIn = action.payload;
@@ -52,7 +53,26 @@ export function usersReducer(
                 newState.users = [];
             }
             break;
-        
+        case UserActionType.Liked:
+            const updatedUser = { ...newState.users[0] };
+            const likedVacationId = action.payload[0] || 0;
+            const updatedLikedVacations = [...updatedUser.likedVacations];
+
+            if (updatedLikedVacations.includes(likedVacationId)) {
+                // Remove the vacation ID if it already exists
+                updatedLikedVacations.splice(
+                    updatedLikedVacations.indexOf(likedVacationId),
+                    1
+                );
+            } else {
+                // Add the vacation ID if it doesn't exist
+                updatedLikedVacations.push(likedVacationId);
+            }
+
+            updatedUser.likedVacations = updatedLikedVacations;
+            newState.users = [updatedUser];
+            return { ...newState };
+
     }
     return newState;
 };

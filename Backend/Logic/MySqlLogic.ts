@@ -113,8 +113,9 @@ const toggleLike = async (UserCode: number, VacationCode: number) => {
     const userSql = `
       SELECT likedVacations
       FROM users
-      WHERE UserCode = ?
+      WHERE UserCode = ${UserCode}
     `;
+    console.log("User SQL:", userSql);
     const userResult: { likedVacations: string }[] = await dal_mysql.execute(
       userSql,
       [UserCode]
@@ -131,14 +132,15 @@ const toggleLike = async (UserCode: number, VacationCode: number) => {
   
       const removeLikeSql = `
         DELETE FROM followers
-        WHERE VacationCode = ? AND UserCode = ?
+        WHERE VacationCode = ${VacationCode} AND UserCode = ${UserCode}
       `;
+      console.log("Remove Like SQL:", removeLikeSql);
       await dal_mysql.execute(removeLikeSql, [VacationCode, UserCode]);
   //?
       const updateVacationSql = `
-        UPDATE vacations_list
+        UPDATE vacations
         SET likes = likes - 1
-        WHERE id = ?
+        WHERE VacationCode = ${VacationCode}
       `;
       await dal_mysql.execute(updateVacationSql, [VacationCode]);
     } else {
@@ -149,22 +151,23 @@ const toggleLike = async (UserCode: number, VacationCode: number) => {
   
       const addLikeSql = `
         INSERT INTO followers (VacationCode, UserCode)
-        VALUES (?, ?)
+        VALUES (${VacationCode}, ${UserCode})
       `;
+      console.log("Add Like SQL:", addLikeSql);
       await dal_mysql.execute(addLikeSql, [VacationCode, UserCode]);
   
       const updateVacationSql = `
-        UPDATE vacations_list
+        UPDATE vacations
         SET likes = likes + 1
-        WHERE id = ?
+        WHERE VacationCode = ${VacationCode}
       `;
       await dal_mysql.execute(updateVacationSql, [VacationCode]);
     }
   
     const updateLikedVacationsSql = `
       UPDATE users
-      SET likedVacations = ?
-      WHERE UserCode = ?
+      SET likedVacations = CAST ('?' AS JSON)
+      WHERE UserCode = ${UserCode}
     `;
     await dal_mysql.execute(updateLikedVacationsSql, [
       JSON.stringify(currentLikedVacations),
@@ -177,7 +180,7 @@ const toggleLike = async (UserCode: number, VacationCode: number) => {
     SELECT vacations.VacationCode
     FROM vacations.followers
     INNER JOIN vacations.vacations ON followers.VacationCode = vacations.VacationCode
-    WHERE followers.UserCode = ?  
+    WHERE followers.UserCode = ${UserCode}  
     `;
   
     console.log("SQL Query:", sql); // Log the SQL query
