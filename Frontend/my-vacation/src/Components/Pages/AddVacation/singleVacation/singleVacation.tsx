@@ -65,10 +65,11 @@ function SingleVacation(props: VacationProps): JSX.Element {
 
 
 
-  const userCode: number = useSelector(
+  const UserCode: number = useSelector(
     (state: { allUsers: UserState }) => state.allUsers.users[0]?.UserCode || 0
   );
-  
+
+
   const handleLike = () => {
     setIsLiked(!isLiked);
     const likedVacationId = parseInt(
@@ -80,13 +81,13 @@ function SingleVacation(props: VacationProps): JSX.Element {
 
    
     const requestData = {
-      userCode: Number(userCode),
-      vacationId: likedVacationId,
+      "UserCode": Number(UserCode),
+      "VacationCode": likedVacationId,
     };
     axios
       .post("http://localhost:4000/api/v1/likes/addLike",  requestData)
       .then((response) => {
-        console.log("response", response);
+        console.log("userCode", UserCode);
       })
       .catch((error) => {
         console.log(error);
@@ -104,7 +105,7 @@ function SingleVacation(props: VacationProps): JSX.Element {
     return null;
   };
 
-  console.log(typeof(userCode));
+  console.log(typeof(UserCode));
 
   return (
     <div className="singleVacation">

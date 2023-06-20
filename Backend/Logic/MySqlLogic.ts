@@ -67,12 +67,6 @@ const getUser = async (UserEmail: string, UserPassword: string) => {
     console.error();
   }
 };
-// user
-// const getUser = async (UserEmail:string , UserPassword:string) => {
-//    const SQLcommand = `SELECT * FROM users WHERE usercode = ${UserCode}`;
-//    console.log("sql>", SQLcommand);
-//    return await dal_mysql.execute(SQLcommand);
-// };
 
 const AddUser = async (NewUser: User) => {
   const { UserFirstName, UserLastName, UserPassword, UserEmail } = NewUser;
