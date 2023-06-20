@@ -171,7 +171,7 @@ const toggleLike = async (UserCode: number, VacationCode: number) => {
   
     const updateLikedVacationsSql = `
     UPDATE users
-    SET likedVacations = likedVacations
+    SET likedVacations = '${JSON.stringify(currentLikedVacations)}'
     WHERE UserCode = ${UserCode}
     `;
     await dal_mysql.execute(updateLikedVacationsSql, [
