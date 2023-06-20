@@ -8,7 +8,9 @@ export enum vacationActionType {
     addVacation = "addVacation",
     deleteVacation = "deleteVacation",
     editVacation = "editVacation",
-    downloadVacation = "downloadVacation"
+    downloadVacation = "downloadVacation",
+    vacationLikes = "VacationLikes",
+    vacationUnlike = "VacationUnlike",
 }
 
 //action data structure
@@ -34,6 +36,21 @@ export const downloadVacationAction = (allVacations: Vacation[]): VacationAction
     return { type: vacationActionType.downloadVacation, payload: allVacations };
 };
 
+export const vacationLikes = (VacationCode: number): VacationAction => {
+    return { type: vacationActionType.vacationLikes, payload: VacationCode };
+  };
+  
+  export const vacationUnlike = (VacationCode: number): VacationAction => {
+    return { type: vacationActionType.vacationUnlike, payload: VacationCode };
+  };
+  const sortVacations = (vacations: Vacation[]): Vacation[] => {
+    return vacations.sort((a, b) => {
+      const startDateA = new Date(a.StartDate);
+      const startDateB = new Date(b.StartDate);
+      return startDateA.getTime() - startDateB.getTime();
+    });
+  };
+
 export function VacationReducer(
     currentState: VacationState = new VacationState(),
     action: VacationAction
@@ -42,8 +59,13 @@ export function VacationReducer(
 
     switch (action.type) {
         case vacationActionType.addVacation:
-            newState.allVacations = [...newState.allVacations, action.payload]
-            break;
+            const newVacations = sortVacations([
+            ...newState.allVacations = [...newState.allVacations, action.payload]
+        ]);
+        return {
+            ...currentState,
+            allVacations: newVacations,
+          };
         case vacationActionType.deleteVacation:
             newState.allVacations = [...newState.allVacations].filter(item => item.VacationCode !== action.payload)
             break;
@@ -56,6 +78,43 @@ export function VacationReducer(
         case vacationActionType.downloadVacation:
             newState.allVacations = action.payload;
             break;
-    }
-    return newState;
-};
+            case vacationActionType.vacationLikes:
+                const vacationId = action.payload;
+                const updatedVacations = currentState.allVacations.map((vacation) => {
+                  if (vacation.VacationCode === vacationId) {
+                    const updatedLikes = (vacation.likes || 0) + 1;
+                    return {
+                      ...vacation,
+                      likes: updatedLikes,
+                    };
+                  }
+                  return vacation;
+                });
+          
+                return {
+                  ...currentState,
+                  allVacations: updatedVacations,
+                };
+              case vacationActionType.vacationUnlike:
+                const unlikedVacationId = action.payload;
+          
+                const unlikedVacations = currentState.allVacations.map((vacation) => {
+                  if (vacation.VacationCode === unlikedVacationId) {
+                    const updatedLikes = (vacation.likes || 0) - 1;
+                    return {
+                      ...vacation,
+                      likes: updatedLikes,
+                    };
+                  }
+                  return vacation;
+                });
+                return {
+                  ...currentState,
+                  allVacations: unlikedVacations,
+                };
+              default:
+                return currentState;
+            }
+          
+            return newState;
+          }

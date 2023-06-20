@@ -96,7 +96,7 @@ function EditVacation(): JSX.Element {
       }
     )
     .then((res) => {
-      navigate("/AdminPage");
+      navigate("/Vacations");
     })
     .catch((error) => {
       console.log(error);

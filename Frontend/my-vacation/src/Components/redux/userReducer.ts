@@ -37,42 +37,43 @@ export const changeLikesAction = (Likes: number[]): UserAction => {
 export function usersReducer(
     currentState: UserState = new UserState(),
     action: UserAction
-): UserState {
+  ): UserState {
     const newState = { ...currentState };
     switch (action.type) {
-        case UserActionType.addUser:
-            newState.users = [...newState.users, action.payload]
-            break;
-        case UserActionType.downloadUsers:
-            newState.users = action.payload;
-
-            break;
-        case UserActionType.isLoggedIn:
-            newState.isLoggedIn = action.payload;
-            if (!action.payload) {
-                newState.users = [];
-            }
-            break;
-        case UserActionType.Liked:
-            const updatedUser = { ...newState.users[0] };
-            const likedVacationId = action.payload[0] || 0;
-            const updatedLikedVacations = [...updatedUser.likedVacations];
-
-            if (updatedLikedVacations.includes(likedVacationId)) {
-                // Remove the vacation ID if it already exists
-                updatedLikedVacations.splice(
-                    updatedLikedVacations.indexOf(likedVacationId),
-                    1
-                );
-            } else {
-                // Add the vacation ID if it doesn't exist
-                updatedLikedVacations.push(likedVacationId);
-            }
-
-            updatedUser.likedVacations = updatedLikedVacations;
-            newState.users = [updatedUser];
-            return { ...newState };
-
+      case UserActionType.addUser:
+        newState.users = [...newState.users, action.payload];
+        break;
+      case UserActionType.downloadUsers:
+        newState.users = action.payload.map((user: User) => {
+          const likedVacations = user.likedVacations || [];
+          return { ...user, likedVacations };
+        });
+        break;
+      case UserActionType.isLoggedIn:
+        newState.isLoggedIn = action.payload;
+        if (!action.payload) {
+          newState.users = [];
+        }
+        break;
+      case UserActionType.Liked:
+        const updatedUser = { ...newState.users[0] };
+        const likedVacationId = action.payload[0] || 0;
+        const updatedLikedVacations = [...updatedUser.likedVacations];
+  
+        if (updatedLikedVacations.includes(likedVacationId)) {
+          // Remove the vacation ID if it already exists
+          updatedLikedVacations.splice(
+            updatedLikedVacations.indexOf(likedVacationId),
+            1
+          );
+        } else {
+          // Add the vacation ID if it doesn't exist
+          updatedLikedVacations.push(likedVacationId);
+        }
+  
+        updatedUser.likedVacations = updatedLikedVacations;
+        newState.users = [updatedUser];
+        return { ...newState };
     }
     return newState;
-};
+  }
