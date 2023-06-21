@@ -6,12 +6,12 @@ class Vacation {
     public Price: number;
     public Img: string;
     public likes: number;
-    public VacationCode?: string;
+    public VacationCode: number;
     
 
     constructor(
        Destination: string, Description: string,
-        StartDate: string, EndDate: string, Price: number, Img: string ,likes: number,VacationCode?: string ) {
+        StartDate: string, EndDate: string, Price: number, Img: string ,likes: number,VacationCode: number ) {
       
             this.VacationCode=VacationCode;
             this.Destination=Destination;

@@ -31,16 +31,60 @@ function Vacations(): JSX.Element {
     dispatch(isLoggedInAction(true));
   }, []);
 
+  const generateCSVContent = () => {
+    const vacationsData = vacations.getState().allVacations.allVacations;
+  
+    // Create the header row
+    const header = "Destination,Likes\n";
+  
+    // Create the data rows
+    const rows = vacationsData
+      .map((vacation) => {
+        const { Destination, likes } = vacation;
+        const likesCount = likes;
+        console.log("likesCount", likesCount);
+        return `${Destination},${likesCount}`;
+      })
+      .join("\n");
+  
+    // Combine header and data rows
+    const csvContent = header + rows;
+  
+    return csvContent;
+  };
+  
+  const createCSV = () => {
+    const csvContent = generateCSVContent(); // Replace this with your own function to generate the CSV content
+  
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    if (link.download !== undefined) {
+      const url = URL.createObjectURL(blob);
+      link.setAttribute("href", url);
+      link.setAttribute("download", "vacations.csv");
+      link.style.visibility = "hidden";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  };
+  
   const renderAddButton = () => {
     if (isAdmin) {
       return (
-        <Button onClick={() => navigate(`/addVacation`)} id="addBtn">
-          Add New Vacation ➕
-        </Button>
+        <div>
+          <Button onClick={() => navigate(`/addVacation`)} id="addBtn">
+            Add New Vacation ➕
+          </Button>
+          <Button onClick={createCSV} id="createCsvBtn">
+            Create CSV 📄
+          </Button>
+        </div>
       );
     }
     return null;
   };
+  
 
   useEffect(() => {
     if (vacations.getState().allVacations.allVacations.length < 1) {

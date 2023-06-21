@@ -25,8 +25,6 @@ function SingleVacation(props: VacationProps): JSX.Element {
   const dispatch = useDispatch();
   const [isLiked, setIsLiked] = useState(false);
 
-  console.log("isAdmin:", isAdmin); // Add this console log to check the isAdmin value
-
   const handleDelete = () => {
     axios.delete(
       `http://localhost:4000/api/v1/vacations/delete/${props.vacationData.VacationCode}`
@@ -62,7 +60,7 @@ function SingleVacation(props: VacationProps): JSX.Element {
   };
 
   const UserCode: number = useSelector(
-    (state: { allUsers: UserState }) => state.allUsers.users[0]?.UserCode || 0
+    (state: { allUsers: UserState }) => state.allUsers.users[0]?.UserCode
   );
 
   const likedVacations = useSelector(
@@ -72,22 +70,17 @@ function SingleVacation(props: VacationProps): JSX.Element {
 
   useEffect(() => {
     // Check if the vacation is liked by the current user
-    const isVacationLiked = likedVacations.includes(
-      parseInt(props.vacationData.VacationCode || "0", 10)
-    );
+    const isVacationLiked = likedVacations.includes(props.vacationData.VacationCode);
     setIsLiked(isVacationLiked);
   }, [likedVacations, props.vacationData.VacationCode]);
 
   const handleLike = () => {
     setIsLiked(!isLiked);
-    const likedVacationId = parseInt(
-      props.vacationData.VacationCode || "0",
-      10
-    );
+    const likedVacationId = props.vacationData.VacationCode;
     dispatch(changeLikesAction([likedVacationId]));
 
     const requestData = {
-      UserCode: Number(UserCode),
+      UserCode,
       VacationCode: likedVacationId,
     };
 
@@ -120,7 +113,6 @@ function SingleVacation(props: VacationProps): JSX.Element {
     return `${day}/${month}/${year}`;
   };
 
-  
   return (
     <div className="singleVacation">
       <div className="container">
