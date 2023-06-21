@@ -6,10 +6,10 @@ import Vacation from "../../model/Vacations/Vacation";
 import { useNavigate } from "react-router-dom";
 import { downloadVacationAction } from "../../redux/VacationReducer";
 import { vacations } from "../../redux/VacationStore";
-import Button from '@mui/material/Button';
-import { userIsAdmin } from "../../Utils/authenticatin"
-import { isLoggedInAction } from '../../redux/userReducer';
-import { useDispatch } from "react-redux";
+import Button from "@mui/material/Button";
+import { userIsAdmin } from "../../Utils/authenticatin";
+import { UserState, isLoggedInAction } from "../../redux/userReducer";
+import { useDispatch, useSelector } from "react-redux";
 
 function Vacations(): JSX.Element {
   const navigate = useNavigate();
@@ -17,20 +17,26 @@ function Vacations(): JSX.Element {
   const [refresh, setRefresh] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10); // Number of items to display per page
-  const isAdmin = userIsAdmin();
+  const [showLikedOnly, setShowLikedOnly] = useState(false);
+  const [showUpcomingOnly, setShowUpcomingOnly] = useState(false);
+  const [showTodayOnly, setShowTodayOnly] = useState(false);
   const dispatch = useDispatch();
-  
-  dispatch(isLoggedInAction(true));
+  const isAdmin = userIsAdmin();
+
+  useEffect(() => {
+    dispatch(isLoggedInAction(true));
+  }, []);
 
   const renderAddButton = () => {
     if (isAdmin) {
       return (
-        <Button onClick={() => navigate(`/addVacation`)} id="addBtn">Add New Vacation</Button>
+        <Button onClick={() => navigate(`/addVacation`)} id="addBtn">
+          Add New Vacation
+        </Button>
       );
     }
     return null;
   };
-
 
   useEffect(() => {
     if (vacations.getState().allVacations.allVacations.length < 1) {
@@ -48,35 +54,111 @@ function Vacations(): JSX.Element {
     setLocalVacations(vacations.getState().allVacations.allVacations);
   }, [refresh]);
 
-  // Calculate the index of the last item for the current page
   const indexOfLastItem = currentPage * itemsPerPage;
-
-  // Calculate the index of the first item for the current page
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
 
-  // Get the current items to display on the current page
-  const currentItems = localVacations.slice(indexOfFirstItem, indexOfLastItem);
-
-  // Change the page
   const paginate = (pageNumber: number) => {
     setCurrentPage(pageNumber);
   };
 
+  const likedVacations = useSelector(
+    (state: { allUsers: UserState }) =>
+      state.allUsers.users[0]?.likedVacations || []
+  );
+
+  const currentDate = new Date();
+
+  const filteredVacations = localVacations
+    .filter((vacation) => {
+      const startDate = new Date(vacation.StartDate);
+
+      if (showLikedOnly && showUpcomingOnly && showTodayOnly) {
+        return (
+          likedVacations.includes(Number(vacation.VacationCode)) &&
+          startDate > currentDate &&
+          startDate.toDateString() === currentDate.toDateString()
+        );
+      } else if (showLikedOnly && showUpcomingOnly) {
+        return (
+          likedVacations.includes(Number(vacation.VacationCode)) &&
+          startDate > currentDate
+        );
+      } else if (showLikedOnly && showTodayOnly) {
+        return (
+          likedVacations.includes(Number(vacation.VacationCode)) &&
+          startDate.toDateString() === currentDate.toDateString()
+        );
+      } else if (showUpcomingOnly && showTodayOnly) {
+        return (
+          startDate > currentDate &&
+          startDate.toDateString() === currentDate.toDateString()
+        );
+      } else if (showLikedOnly) {
+        return likedVacations.includes(Number(vacation.VacationCode));
+      } else if (showUpcomingOnly) {
+        return startDate > currentDate;
+      } else if (showTodayOnly) {
+        return startDate.toDateString() === currentDate.toDateString();
+      } else {
+        return true;
+      }
+    })
+    .sort((a, b) => new Date(a.StartDate).getTime() - new Date(b.StartDate).getTime());
+
+
+  const currentItems = filteredVacations.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
+
   return (
     <div className="Vacations">
-     {renderAddButton()}
+      {renderAddButton()}
       <div className="container">
-      {currentItems.map((item) => (
-        <SingleVacation key={item.VacationCode} vacationData={item} />
-      ))}
+        {currentItems.map((item) => (
+          <SingleVacation key={item.VacationCode} vacationData={item} />
+        ))}
       </div>
+      <label>
+        Show Liked Vacations Only:
+        <input
+          type="checkbox"
+          checked={showLikedOnly}
+          onChange={() => setShowLikedOnly(!showLikedOnly)}
+        />
+      </label>
+      <br />
+      <br />
+      <label>
+        Show upcoming vacations only:
+        <input
+          type="checkbox"
+          checked={showUpcomingOnly}
+          onChange={() => setShowUpcomingOnly(!showUpcomingOnly)}
+        />
+      </label>
+      <br />
+      <br />
+      <label>
+        Show vacations for today only:
+        <input
+          type="checkbox"
+          checked={showTodayOnly}
+          onChange={() => setShowTodayOnly(!showTodayOnly)}
+        />
+      </label>
+
       <ul className="pagination">
-        {Array.from({ length: Math.ceil(localVacations.length / itemsPerPage) }).map((_, index) => {
+        {Array.from({
+          length: Math.ceil(filteredVacations.length / itemsPerPage),
+        }).map((_, index) => {
           const pageNumber = index + 1;
           return (
             <li
               key={pageNumber}
-              className={`page-item${currentPage === pageNumber ? " active" : ""}`}
+              className={`page-item${
+                currentPage === pageNumber ? " active" : ""
+              }`}
             >
               <a
                 href="#"

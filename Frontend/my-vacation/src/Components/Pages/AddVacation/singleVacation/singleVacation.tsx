@@ -120,6 +120,7 @@ function SingleVacation(props: VacationProps): JSX.Element {
     return `${day}/${month}/${year}`;
   };
 
+  
   return (
     <div className="singleVacation">
       <div className="container">
