@@ -119,6 +119,8 @@ function Vacations(): JSX.Element {
           <SingleVacation key={item.VacationCode} vacationData={item} />
         ))}
       </div>
+      {!isAdmin && (
+        <>
       <label>
         Show Liked Vacations Only:
         <input
@@ -147,7 +149,8 @@ function Vacations(): JSX.Element {
           onChange={() => setShowTodayOnly(!showTodayOnly)}
         />
       </label>
-
+      </>
+      )}
       <ul className="pagination">
         {Array.from({
           length: Math.ceil(filteredVacations.length / itemsPerPage),
