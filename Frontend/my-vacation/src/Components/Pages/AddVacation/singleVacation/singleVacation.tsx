@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
@@ -14,7 +14,6 @@ import { isLoggedInAction } from "../../../redux/userReducer";
 import { changeLikesAction } from "../../../redux/userReducer";
 import { UserState } from "../../../redux/userReducer";
 
-
 interface VacationProps {
   vacationData: Vacation;
 }
@@ -24,7 +23,6 @@ function SingleVacation(props: VacationProps): JSX.Element {
   const [showModal, setShowModal] = useState(false);
   const isAdmin = userIsAdmin();
   const dispatch = useDispatch();
-  dispatch(isLoggedInAction(true));
   const [isLiked, setIsLiked] = useState(false);
 
   console.log("isAdmin:", isAdmin); // Add this console log to check the isAdmin value
@@ -63,12 +61,22 @@ function SingleVacation(props: VacationProps): JSX.Element {
     return null;
   };
 
-
-
   const UserCode: number = useSelector(
     (state: { allUsers: UserState }) => state.allUsers.users[0]?.UserCode || 0
   );
 
+  const likedVacations = useSelector(
+    (state: { allUsers: UserState }) =>
+      state.allUsers.users[0]?.likedVacations || []
+  );
+
+  useEffect(() => {
+    // Check if the vacation is liked by the current user
+    const isVacationLiked = likedVacations.includes(
+      parseInt(props.vacationData.VacationCode || "0", 10)
+    );
+    setIsLiked(isVacationLiked);
+  }, [likedVacations, props.vacationData.VacationCode]);
 
   const handleLike = () => {
     setIsLiked(!isLiked);
@@ -77,15 +85,14 @@ function SingleVacation(props: VacationProps): JSX.Element {
       10
     );
     dispatch(changeLikesAction([likedVacationId]));
-    console.log ("likedVacationId", likedVacationId);
 
-   
     const requestData = {
-      "UserCode": Number(UserCode),
-      "VacationCode": likedVacationId,
+      UserCode: Number(UserCode),
+      VacationCode: likedVacationId,
     };
+
     axios
-      .post("http://localhost:4000/api/v1/likes/addLike",  requestData)
+      .post("http://localhost:4000/api/v1/likes/addLike", requestData)
       .then((response) => {
         console.log("userCode", UserCode);
       })
@@ -104,8 +111,6 @@ function SingleVacation(props: VacationProps): JSX.Element {
     }
     return null;
   };
-
-  console.log(typeof(UserCode));
 
   return (
     <div className="singleVacation">
