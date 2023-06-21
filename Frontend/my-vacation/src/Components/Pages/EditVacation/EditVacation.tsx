@@ -148,9 +148,7 @@ function EditVacation(): JSX.Element {
           <TextField
             type="date"
             required
-            inputProps={{
-              min: new Date().toISOString().split("T")[0],
-            }}
+           
             {...register("StartDate", { required: true })}
             defaultValue={params.StartDate || ""}
             onChange={(e) => {
@@ -162,7 +160,7 @@ function EditVacation(): JSX.Element {
             }}
           />
           {errors.StartDate && (
-            <p className="error-message">Start Date is needed</p>
+            <p className="error-message">Start Date is required</p>
           )}
           <br />
           <br />
@@ -221,13 +219,13 @@ function EditVacation(): JSX.Element {
             defaultValue={Price}
           />
           {errors.Price?.type === "required" && (
-            <p className="error-message">Price is needed</p>
+            <p className="error-message">Price is required</p>
           )}
           <br />
           <br />
           <p>Image</p>
-          {existingImg && <img src={`http://localhost:4000/${existingImg}`} alt="Vacation" width={200}/>}
-          <input type="file" onChange={handleImageChange} />
+          {existingImg && <img src={`http://localhost:4000/${existingImg}`} alt="Vacation" width={200} />}
+          <input type="file" onChange={handleImageChange} required/>
           {errors.Img?.type === "required" && (
             <p className="error-message">Image is required</p>
           )}

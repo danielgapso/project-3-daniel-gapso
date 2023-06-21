@@ -8,7 +8,11 @@ import { downloadVacationAction } from "../../redux/VacationReducer";
 import { vacations } from "../../redux/VacationStore";
 import Button from "@mui/material/Button";
 import { userIsAdmin } from "../../Utils/authenticatin";
-import { UserState, isLoggedInAction } from "../../redux/userReducer";
+import {
+  UserState,
+  isLoggedInAction,
+  downloadUsersAction,
+} from "../../redux/userReducer";
 import { useDispatch, useSelector } from "react-redux";
 
 function Vacations(): JSX.Element {
@@ -66,6 +70,12 @@ function Vacations(): JSX.Element {
       state.allUsers.users[0]?.likedVacations || []
   );
 
+  const currentUser = useSelector(
+    (state: { allUsers: UserState }) =>
+      `${state.allUsers.users[0]?.UserFirstName || ""} ${state.allUsers.users[0]?.UserLastName || ""}`
+  );
+  
+
   const currentDate = new Date();
 
   const filteredVacations = localVacations
@@ -115,6 +125,7 @@ function Vacations(): JSX.Element {
 
   return (
     <div className="Vacations">
+      <p>Hello, {currentUser}!</p>
       {renderAddButton()}
       <div className="container">
         {currentItems.map((item) => (
@@ -123,6 +134,7 @@ function Vacations(): JSX.Element {
       </div>
       {!isAdmin && (
         <>
+          
           <label>
             Show Liked Vacations Only: 💖
             <input
@@ -153,7 +165,8 @@ function Vacations(): JSX.Element {
           </label>
         </>
       )}
-      <div className="pagination">⬅️
+      <div className="pagination">
+        ⬅️
         {Array.from({
           length: Math.ceil(filteredVacations.length / itemsPerPage),
         }).map((_, index) => {
@@ -172,10 +185,11 @@ function Vacations(): JSX.Element {
               >
                 <span className="pagination-arrow"> {pageNumber} </span>
               </a>
-              </span>
+            </span>
           );
         })}
-      ➡️</div>
+        ➡️
+      </div>
     </div>
   );
 }

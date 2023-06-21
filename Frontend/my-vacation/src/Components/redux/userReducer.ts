@@ -35,6 +35,7 @@ export const changeLikesAction = (Likes: number[]): UserAction => {
   return { type: UserActionType.Liked, payload: Likes };
 };
 
+
 export function usersReducer(
   currentState: UserState = new UserState(),
   action: UserAction
