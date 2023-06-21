@@ -31,7 +31,7 @@ function Vacations(): JSX.Element {
     if (isAdmin) {
       return (
         <Button onClick={() => navigate(`/addVacation`)} id="addBtn">
-          Add New Vacation
+          Add New Vacation ➕
         </Button>
       );
     }
@@ -103,8 +103,10 @@ function Vacations(): JSX.Element {
         return true;
       }
     })
-    .sort((a, b) => new Date(a.StartDate).getTime() - new Date(b.StartDate).getTime());
-
+    .sort(
+      (a, b) =>
+        new Date(a.StartDate).getTime() - new Date(b.StartDate).getTime()
+    );
 
   const currentItems = filteredVacations.slice(
     indexOfFirstItem,
@@ -121,43 +123,43 @@ function Vacations(): JSX.Element {
       </div>
       {!isAdmin && (
         <>
-      <label>
-        Show Liked Vacations Only:
-        <input
-          type="checkbox"
-          checked={showLikedOnly}
-          onChange={() => setShowLikedOnly(!showLikedOnly)}
-        />
-      </label>
-      <br />
-      <br />
-      <label>
-        Show upcoming vacations only:
-        <input
-          type="checkbox"
-          checked={showUpcomingOnly}
-          onChange={() => setShowUpcomingOnly(!showUpcomingOnly)}
-        />
-      </label>
-      <br />
-      <br />
-      <label>
-        Show vacations for today only:
-        <input
-          type="checkbox"
-          checked={showTodayOnly}
-          onChange={() => setShowTodayOnly(!showTodayOnly)}
-        />
-      </label>
-      </>
+          <label>
+            Show Liked Vacations Only: 💖
+            <input
+              type="checkbox"
+              checked={showLikedOnly}
+              onChange={() => setShowLikedOnly(!showLikedOnly)}
+            />
+          </label>
+          <br />
+          <br />
+          <label>
+            Show upcoming vacations only: ⬆️
+            <input
+              type="checkbox"
+              checked={showUpcomingOnly}
+              onChange={() => setShowUpcomingOnly(!showUpcomingOnly)}
+            />
+          </label>
+          <br />
+          <br />
+          <label>
+            Show vacations for today only: ⬇️
+            <input
+              type="checkbox"
+              checked={showTodayOnly}
+              onChange={() => setShowTodayOnly(!showTodayOnly)}
+            />
+          </label>
+        </>
       )}
-      <ul className="pagination">
+      <div className="pagination">⬅️
         {Array.from({
           length: Math.ceil(filteredVacations.length / itemsPerPage),
         }).map((_, index) => {
           const pageNumber = index + 1;
           return (
-            <li
+            <span
               key={pageNumber}
               className={`page-item${
                 currentPage === pageNumber ? " active" : ""
@@ -168,12 +170,12 @@ function Vacations(): JSX.Element {
                 className="page-link"
                 onClick={() => paginate(pageNumber)}
               >
-                {pageNumber}
+                <span className="pagination-arrow"> {pageNumber} </span>
               </a>
-            </li>
+              </span>
           );
         })}
-      </ul>
+      ➡️</div>
     </div>
   );
 }

@@ -43,7 +43,7 @@ function SingleVacation(props: VacationProps): JSX.Element {
             navigate(`/EditVacation/${props.vacationData.VacationCode}`)
           }
         >
-          Edit Vacation
+          Edit Vacation ✏️
         </Button>
       );
     }
@@ -54,7 +54,7 @@ function SingleVacation(props: VacationProps): JSX.Element {
     if (isAdmin) {
       return (
         <Button size="small" onClick={() => setShowModal(true)}>
-          ❌
+          Delete Vacation❌
         </Button>
       );
     }
@@ -154,12 +154,12 @@ function SingleVacation(props: VacationProps): JSX.Element {
             {renderLikeButton()}
             {showModal && (
               <div className="modal">
-                <p>Are you sure you want to delete this vacation?</p>
+                <p>❗Are you sure you want to delete this vacation?❗</p>
                 <Button size="small" onClick={handleDelete}>
-                  Yes
+                 🟢 Yes
                 </Button>
                 <Button size="small" onClick={() => setShowModal(false)}>
-                  No
+                 🔴 No
                 </Button>
               </div>
             )}
