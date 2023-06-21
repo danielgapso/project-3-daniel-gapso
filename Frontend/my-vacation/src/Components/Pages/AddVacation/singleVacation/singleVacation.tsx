@@ -112,6 +112,14 @@ function SingleVacation(props: VacationProps): JSX.Element {
     return null;
   };
 
+  const renderFormattedDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const day = date.getDate().toString().padStart(2, "0");
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const year = date.getFullYear().toString().slice(-2);
+    return `${day}/${month}/${year}`;
+  };
+
   return (
     <div className="singleVacation">
       <div className="container">
@@ -124,18 +132,19 @@ function SingleVacation(props: VacationProps): JSX.Element {
           />
           <CardContent>
             <Typography gutterBottom variant="h5" component="div">
-              {props.vacationData.Destination}
+              <span>Destination: {props.vacationData.Destination}</span>
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              {props.vacationData.Description} <br />
-              {props.vacationData.StartDate}
+              <span>Description: {props.vacationData.Description} </span>
               <br />
-              {props.vacationData.EndDate}
+              <span>Starting Date: {renderFormattedDate(props.vacationData.StartDate)}</span>
               <br />
-              {props.vacationData.Price}
+              <span>Ending Date: {renderFormattedDate(props.vacationData.EndDate)}</span>
+              <br />
+              <span>Price: {props.vacationData.Price} $</span>
               <br />
               <br />
-              <span>was liked by {props.vacationData.likes}💖</span>
+              <span>Was liked by {props.vacationData.likes} 💖</span>
             </Typography>
           </CardContent>
           <CardActions>
