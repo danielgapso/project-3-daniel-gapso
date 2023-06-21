@@ -134,6 +134,8 @@ function SingleVacation(props: VacationProps): JSX.Element {
               <br />
               {props.vacationData.Price}
               <br />
+              <br />
+              <span>was liked by {props.vacationData.likes}💖</span>
             </Typography>
           </CardContent>
           <CardActions>
