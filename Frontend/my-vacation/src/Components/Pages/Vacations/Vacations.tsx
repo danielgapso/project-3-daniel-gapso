@@ -10,8 +10,7 @@ import Button from "@mui/material/Button";
 import { userIsAdmin } from "../../Utils/authenticatin";
 import {
   UserState,
-  isLoggedInAction,
-  downloadUsersAction,
+  isLoggedInAction
 } from "../../redux/userReducer";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -33,10 +32,10 @@ function Vacations(): JSX.Element {
 
   const generateCSVContent = () => {
     const vacationsData = vacations.getState().allVacations.allVacations;
-  
+
     // Create the header row
     const header = "Destination,Likes\n";
-  
+
     // Create the data rows
     const rows = vacationsData
       .map((vacation) => {
@@ -46,16 +45,16 @@ function Vacations(): JSX.Element {
         return `${Destination},${likesCount}`;
       })
       .join("\n");
-  
+
     // Combine header and data rows
     const csvContent = header + rows;
-  
+
     return csvContent;
   };
-  
+
   const createCSV = () => {
     const csvContent = generateCSVContent(); // Replace this with your own function to generate the CSV content
-  
+
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
     const link = document.createElement("a");
     if (link.download !== undefined) {
@@ -68,7 +67,7 @@ function Vacations(): JSX.Element {
       document.body.removeChild(link);
     }
   };
-  
+
   const renderAddButton = () => {
     if (isAdmin) {
       return (
@@ -79,12 +78,14 @@ function Vacations(): JSX.Element {
           <Button onClick={createCSV} id="createCsvBtn">
             Create CSV 📄
           </Button>
+          <Button onClick={() => navigate(`/VacationCharts`)}>
+            Charts 📊
+          </Button>
         </div>
       );
     }
     return null;
   };
-  
 
   useEffect(() => {
     if (vacations.getState().allVacations.allVacations.length < 1) {
@@ -116,9 +117,10 @@ function Vacations(): JSX.Element {
 
   const currentUser = useSelector(
     (state: { allUsers: UserState }) =>
-      `${state.allUsers.users[0]?.UserFirstName || ""} ${state.allUsers.users[0]?.UserLastName || ""}`
+      `${state.allUsers.users[0]?.UserFirstName || ""} ${
+        state.allUsers.users[0]?.UserLastName || ""
+      }`
   );
-  
 
   const currentDate = new Date();
 
@@ -178,7 +180,6 @@ function Vacations(): JSX.Element {
       </div>
       {!isAdmin && (
         <>
-          
           <label>
             Show Liked Vacations Only: 💖
             <input
