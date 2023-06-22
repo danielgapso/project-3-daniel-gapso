@@ -10,6 +10,8 @@ import Vacations from "../../Pages/Vacations/Vacations";
 import "./MainRout.css";
 import { PrivateRoutes, AdminRoutes } from "../ProtectedRoute";
 
+//navigate the user throuth the disired route and prevent users to acsess admin routes and 
+//unregistered users to acsess the vacations
 function MainRout(): JSX.Element {
   return (
     <div className="MainRout">
@@ -23,7 +25,10 @@ function MainRout(): JSX.Element {
         </Route>
         <Route element={<AdminRoutes />}>
           <Route path="/AddVacation" element={<AddVacation />} />
-          <Route path="/EditVacation/:VacationCode" element={<EditVacation />} />
+          <Route
+            path="/EditVacation/:VacationCode"
+            element={<EditVacation />}
+          />
           <Route path="/VacationCharts" element={<VacationCharts />} />
         </Route>
       </Routes>

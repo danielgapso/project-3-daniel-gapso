@@ -2,15 +2,10 @@ import { Button, ButtonGroup, TextField } from "@mui/material";
 import { useForm } from "react-hook-form";
 import "./Register.css";
 import { useNavigate } from "react-router-dom";
-import User from "../../model/Roles/User";
 import { useState } from "react";
 import axios from "axios";
 
 function Register(): JSX.Element {
-  const [UserFirstName, setUserFirstName] = useState("");
-  const [UserLastName, setUserLastName] = useState("");
-  const [UserEmail, setUserEmail] = useState("");
-  const [UserPassword, setUserPassword] = useState("");
   const [serverError, setServerError] = useState("");
 
   const navigate = useNavigate();
@@ -27,11 +22,11 @@ function Register(): JSX.Element {
     UserPassword: string;
   };
 
-  const onSubmit = (data: userForm) => {
+  const onSubmit = (data: userForm) => {//submit the registration form
     addNewUser(data);
   };
 
-  const addNewUser = (data: userForm) => {
+  const addNewUser = (data: userForm) => {//send the registration data
     const formData = new FormData();
     formData.append("UserFirstName", data.UserFirstName);
     formData.append("UserLastName", data.UserLastName);
@@ -41,7 +36,7 @@ function Register(): JSX.Element {
     axios
       .post("http://localhost:4000/api/v1/users/register", formData)
       .then((res) => {
-        if (res.data === "Email already exists in the database") {
+        if (res.data === "Email already exists in the database") {//check if the email exists in the data base
           setServerError("Email already exists");
         } else {
           navigate("/Vacations");
@@ -88,7 +83,7 @@ function Register(): JSX.Element {
             {...register("UserEmail", {
               required: true,
               pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-            })}
+            })}//check the email pattern
           />
           {errors.UserEmail?.type === "required" && (
             <p className="error-message">Email is needed</p>

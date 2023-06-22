@@ -1,6 +1,8 @@
 import { Outlet, Navigate } from "react-router-dom";
 import { vacations } from "../redux/VacationStore";
 
+//create special routes to navigate the proper user or admin and only registered users
+
 const userAuth = () => {
   const userLogged = vacations.getState().allUsers.isLoggedIn;
   const user = vacations.getState().allUsers.users[0];
@@ -20,7 +22,5 @@ const AdminRoutes = () => {
     return <Navigate to="/Login" />;
   }
 };
-
-
 
 export { PrivateRoutes, AdminRoutes };

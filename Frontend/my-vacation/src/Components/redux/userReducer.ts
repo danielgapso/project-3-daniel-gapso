@@ -12,6 +12,7 @@ export enum UserActionType {
   Liked = "Liked",
 }
 
+//action data structure
 export interface UserAction {
   type: UserActionType;
   payload?: any;
@@ -35,17 +36,20 @@ export const changeLikesAction = (Likes: number[]): UserAction => {
   return { type: UserActionType.Liked, payload: Likes };
 };
 
-
+//the reducers 
 export function usersReducer(
   currentState: UserState = new UserState(),
   action: UserAction
 ): UserState {
   const newState = { ...currentState };
   switch (action.type) {
+
+    //add the user
     case UserActionType.addUser:
       newState.users = [...newState.users, action.payload];
       break;
 
+    //download the user details
     case UserActionType.downloadUsers:
       const user = action.payload[0];
       const likedVacationsString = user.likedVacations || '[]';
@@ -57,6 +61,7 @@ export function usersReducer(
       }
       break;
 
+    //checks if the user logged in
     case UserActionType.isLoggedIn:
       newState.isLoggedIn = action.payload;
       if (!action.payload) {
@@ -64,19 +69,22 @@ export function usersReducer(
       }
       break;
 
+    //shows liked vacations by the logged user
     case UserActionType.Liked:
       const updatedUser = { ...newState.users[0] };
       const likedVacationId = action.payload[0] || 0;
       const updatedLikedVacations = [...updatedUser.likedVacations];
 
       if (updatedLikedVacations.includes(likedVacationId)) {
-        // Remove the vacation ID if it already exists
+
+        // Remove the vacation code if it already exists
         updatedLikedVacations.splice(
           updatedLikedVacations.indexOf(likedVacationId),
           1
         );
       } else {
-        // Add the vacation ID if it doesn't exist
+
+        // Add the vacation code if it doesnt exist
         updatedLikedVacations.push(likedVacationId);
       }
       updatedUser.likedVacations = updatedLikedVacations;

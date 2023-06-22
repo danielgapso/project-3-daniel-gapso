@@ -8,10 +8,7 @@ import { downloadVacationAction } from "../../redux/VacationReducer";
 import { vacations } from "../../redux/VacationStore";
 import Button from "@mui/material/Button";
 import { userIsAdmin } from "../../Utils/authenticatin";
-import {
-  UserState,
-  isLoggedInAction
-} from "../../redux/userReducer";
+import { UserState, isLoggedInAction } from "../../redux/userReducer";
 import { useDispatch, useSelector } from "react-redux";
 
 function Vacations(): JSX.Element {
@@ -19,7 +16,7 @@ function Vacations(): JSX.Element {
   const [localVacations, setLocalVacations] = useState<Vacation[]>([]);
   const [refresh, setRefresh] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(10); // Number of items to display per page
+  const [itemsPerPage] = useState(10); // Number of vacations to display per page
   const [showLikedOnly, setShowLikedOnly] = useState(false);
   const [showUpcomingOnly, setShowUpcomingOnly] = useState(false);
   const [showTodayOnly, setShowTodayOnly] = useState(false);
@@ -28,14 +25,12 @@ function Vacations(): JSX.Element {
 
   useEffect(() => {
     dispatch(isLoggedInAction(true));
-  }, []);
+  }, [dispatch]);
 
   const generateCSVContent = () => {
     const vacationsData = vacations.getState().allVacations.allVacations;
-
     // Create the header row
     const header = "Destination,Likes\n";
-
     // Create the data rows
     const rows = vacationsData
       .map((vacation) => {
@@ -45,16 +40,14 @@ function Vacations(): JSX.Element {
         return `${Destination},${likesCount}`;
       })
       .join("\n");
-
     // Combine header and data rows
     const csvContent = header + rows;
-
     return csvContent;
   };
 
   const createCSV = () => {
-    const csvContent = generateCSVContent(); // Replace this with your own function to generate the CSV content
-
+    //creates the csv file
+    const csvContent = generateCSVContent();
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
     const link = document.createElement("a");
     if (link.download !== undefined) {
@@ -69,6 +62,7 @@ function Vacations(): JSX.Element {
   };
 
   const renderAddButton = () => {
+    //will show this buttons only when the logged user is admin
     if (isAdmin) {
       return (
         <div>
@@ -78,9 +72,7 @@ function Vacations(): JSX.Element {
           <Button onClick={createCSV} id="createCsvBtn">
             Create CSV 📄
           </Button>
-          <Button onClick={() => navigate(`/VacationCharts`)}>
-            Charts 📊
-          </Button>
+          <Button onClick={() => navigate(`/VacationCharts`)}>Charts 📊</Button>
         </div>
       );
     }
@@ -88,6 +80,7 @@ function Vacations(): JSX.Element {
   };
 
   useEffect(() => {
+    //get all the vacations stored in the data base
     if (vacations.getState().allVacations.allVacations.length < 1) {
       console.log("getting data from backend....");
       axios
@@ -105,7 +98,6 @@ function Vacations(): JSX.Element {
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-
   const paginate = (pageNumber: number) => {
     setCurrentPage(pageNumber);
   };
@@ -122,13 +114,14 @@ function Vacations(): JSX.Element {
       }`
   );
 
-  const currentDate = new Date();
+  const currentDate = new Date(); //set current date to today
 
   const filteredVacations = localVacations
     .filter((vacation) => {
       const startDate = new Date(vacation.StartDate);
 
       if (showLikedOnly && showUpcomingOnly && showTodayOnly) {
+        //show the filterd vacations by the users click
         return (
           likedVacations.includes(Number(vacation.VacationCode)) &&
           startDate > currentDate &&
@@ -150,16 +143,20 @@ function Vacations(): JSX.Element {
           startDate.toDateString() === currentDate.toDateString()
         );
       } else if (showLikedOnly) {
+        //only show the liked vacations by the user
         return likedVacations.includes(Number(vacation.VacationCode));
       } else if (showUpcomingOnly) {
+        //only sohw upcoming vacations
         return startDate > currentDate;
       } else if (showTodayOnly) {
+        //only show the vacations that start today
         return startDate.toDateString() === currentDate.toDateString();
       } else {
         return true;
       }
     })
     .sort(
+      //filter the vacations from the closest to the latest
       (a, b) =>
         new Date(a.StartDate).getTime() - new Date(b.StartDate).getTime()
     );

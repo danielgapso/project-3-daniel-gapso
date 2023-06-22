@@ -10,7 +10,6 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Vacation from "../../../model/Vacations/Vacation";
 import { userIsAdmin } from "../../../Utils/authenticatin";
-import { isLoggedInAction } from "../../../redux/userReducer";
 import { changeLikesAction } from "../../../redux/userReducer";
 import { UserState } from "../../../redux/userReducer";
 
@@ -26,19 +25,21 @@ function SingleVacation(props: VacationProps): JSX.Element {
   const [isLiked, setIsLiked] = useState(false);
 
   const handleDelete = () => {
+    // a function to delete the vacation the admin clicks on
     axios.delete(
       `http://localhost:4000/api/v1/vacations/delete/${props.vacationData.VacationCode}`
     );
-    setShowModal(false);
+    setShowModal(false); //shows the modal that asks the user if he is sure
   };
 
   const renderEditButton = () => {
+    // a function to show or hide the button if the user is admin or not
     if (isAdmin) {
       return (
         <Button
           size="small"
-          onClick={() =>
-            navigate(`/EditVacation/${props.vacationData.VacationCode}`)
+          onClick={
+            () => navigate(`/EditVacation/${props.vacationData.VacationCode}`) //navigates to the edit page with the vacation values
           }
         >
           Edit Vacation ✏️
@@ -49,6 +50,7 @@ function SingleVacation(props: VacationProps): JSX.Element {
   };
 
   const renderDeleteButton = () => {
+    //the modal to show the delete button
     if (isAdmin) {
       return (
         <Button size="small" onClick={() => setShowModal(true)}>
@@ -69,12 +71,15 @@ function SingleVacation(props: VacationProps): JSX.Element {
   );
 
   useEffect(() => {
-    // Check if the vacation is liked by the current user
-    const isVacationLiked = likedVacations.includes(props.vacationData.VacationCode);
+    // Check if the vacation is liked by the logged in user
+    const isVacationLiked = likedVacations.includes(
+      props.vacationData.VacationCode
+    );
     setIsLiked(isVacationLiked);
   }, [likedVacations, props.vacationData.VacationCode]);
 
   const handleLike = () => {
+    // a function to toggle between the like or unlike
     setIsLiked(!isLiked);
     const likedVacationId = props.vacationData.VacationCode;
     dispatch(changeLikesAction([likedVacationId]));
@@ -95,6 +100,7 @@ function SingleVacation(props: VacationProps): JSX.Element {
   };
 
   const renderLikeButton = () => {
+    //the like button
     if (!isAdmin) {
       return (
         <Button size="small" onClick={handleLike}>
@@ -106,6 +112,7 @@ function SingleVacation(props: VacationProps): JSX.Element {
   };
 
   const renderFormattedDate = (dateString: string) => {
+    //change the date to dd/mm/yy
     const date = new Date(dateString);
     const day = date.getDate().toString().padStart(2, "0");
     const month = (date.getMonth() + 1).toString().padStart(2, "0");
@@ -130,9 +137,14 @@ function SingleVacation(props: VacationProps): JSX.Element {
             <Typography variant="body2" color="text.secondary">
               <span>Description: {props.vacationData.Description} </span>
               <br />
-              <span>Starting Date: {renderFormattedDate(props.vacationData.StartDate)}</span>
+              <span>
+                Starting Date:{" "}
+                {renderFormattedDate(props.vacationData.StartDate)}
+              </span>
               <br />
-              <span>Ending Date: {renderFormattedDate(props.vacationData.EndDate)}</span>
+              <span>
+                Ending Date: {renderFormattedDate(props.vacationData.EndDate)}
+              </span>
               <br />
               <span>Price: {props.vacationData.Price} $</span>
               <br />
@@ -148,10 +160,10 @@ function SingleVacation(props: VacationProps): JSX.Element {
               <div className="modal">
                 <p>❗Are you sure you want to delete this vacation?❗</p>
                 <Button size="small" onClick={handleDelete}>
-                 🟢 Yes
+                  🟢 Yes
                 </Button>
                 <Button size="small" onClick={() => setShowModal(false)}>
-                 🔴 No
+                  🔴 No
                 </Button>
               </div>
             )}

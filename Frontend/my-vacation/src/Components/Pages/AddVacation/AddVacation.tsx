@@ -5,11 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { Button, ButtonGroup, TextField } from "@mui/material";
 
 function AddVacation() {
-  const [Destination, setDestination] = useState("");
-  const [Description, setDescription] = useState("");
   const [StartDate, setStartDate] = useState("");
   const [EndDate, setEndDate] = useState("");
-  const [Price, setPrice] = useState(0);
   const [img, setImg] = useState<File | null>(null);
 
   const navigate = useNavigate();
@@ -31,17 +28,19 @@ function AddVacation() {
   };
 
   const onSubmit = (data: VacationFormValues) => {
+    //submit the vacation
     AddNewVacation(data);
   };
 
   useEffect(() => {
     if (StartDate && EndDate && StartDate > EndDate) {
-      // If the end date is prior to the start date, reset the end date
+      // If the end date is prior to the start date reset the end date
       setEndDate("");
     }
   }, [StartDate, EndDate]);
 
   const AddNewVacation = (data: VacationFormValues) => {
+    //send the vacation with the values below
     const formData = new FormData();
     formData.append("Destination", data.Destination);
     formData.append("Description", data.Description);
@@ -59,7 +58,7 @@ function AddVacation() {
         },
       })
       .then((res) => {
-        navigate("/Vacations");
+        navigate("/Vacations"); // navigate back to main page
       })
       .catch((error) => {
         console.log(error);
@@ -67,6 +66,7 @@ function AddVacation() {
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // a function to upload the img
     const file = e.target.files && e.target.files[0];
     if (file) {
       setImg(file);
@@ -114,7 +114,7 @@ function AddVacation() {
                 required
                 placeholder="Start Date"
                 inputProps={{
-                  min: new Date().toISOString().split("T")[0],
+                  min: new Date().toISOString().split("T")[0], //the minimun date is the date of today
                 }}
                 value={field.value} // Use the value prop from the field object
                 onChange={(e) => {
@@ -175,9 +175,9 @@ function AddVacation() {
               onInput: (e) => {
                 const value = (e.target as HTMLInputElement).valueAsNumber;
                 if (value < 0) {
-                  (e.target as HTMLInputElement).value = "0"; // Set the value to the minimum allowed value
+                  (e.target as HTMLInputElement).value = "0"; // Set the value to minimum 0
                 } else if (value > 10000) {
-                  (e.target as HTMLInputElement).value = "10000"; // Set the value to the maximum allowed value
+                  (e.target as HTMLInputElement).value = "10000"; // Set the value to the maximum 10000
                 }
               },
             }}

@@ -5,7 +5,6 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Button, ButtonGroup, TextField } from "@mui/material";
 
-
 function EditVacation(): JSX.Element {
   const navigate = useNavigate();
   const params = useParams();
@@ -13,10 +12,10 @@ function EditVacation(): JSX.Element {
     register,
     handleSubmit,
     formState: { errors },
-    setValue, // Add the setValue function from react-hook-form
+    setValue,
   } = useForm<VacationFormValues>({
     defaultValues: {
-      Destination: "", // Set the default values to empty strings
+      Destination: "",
       Description: "",
       StartDate: "",
       EndDate: "",
@@ -26,7 +25,7 @@ function EditVacation(): JSX.Element {
   });
 
   interface VacationFormValues {
-    VacationCode:string
+    VacationCode: string;
     Destination: string;
     Description: string;
     StartDate: string;
@@ -42,18 +41,20 @@ function EditVacation(): JSX.Element {
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [existingImg, setExistingImg] = useState("");
-  
+
   const onSubmit = (data: VacationFormValues) => {
+    //send the edited vacation
     AddEditVacation(data);
   };
 
   useEffect(() => {
+    //get the vacation data by its code
     axios
       .get(
         `http://localhost:4000/api/v1/vacations/GetVacation/${params.VacationCode}`
       )
       .then((response) => {
-        const vacation = response.data; // Assuming the response data is an object representing a vacation
+        const vacation = response.data;
 
         // Set the form field values using the setValue function
         setValue("Destination", vacation.Destination);
@@ -63,8 +64,6 @@ function EditVacation(): JSX.Element {
         setValue("Price", vacation.Price);
         setValue("VacationCode", vacation.VacationCode);
         setExistingImg(vacation.Img);
-        // Note: The Img field is not directly supported by setValue, you may need to handle it separately
-
         setStartDate(new Date(vacation.StartDate));
         setEndDate(new Date(vacation.EndDate));
       })
@@ -74,37 +73,38 @@ function EditVacation(): JSX.Element {
   }, [params.VacationCode, setValue]);
 
   const AddEditVacation = (data: VacationFormValues) => {
+    //update the vacation by its new values
     const formData = new FormData();
     formData.append("Destination", data.Destination);
     formData.append("Description", data.Description);
     formData.append("StartDate", data.StartDate);
     formData.append("EndDate", data.EndDate);
     formData.append("Price", data.Price.toString());
-    formData.append("VacationCode", data.VacationCode)
+    formData.append("VacationCode", data.VacationCode);
     if (Img) {
       formData.append("Img", Img);
     }
-  
+
     axios
-    .put(
-      `http://localhost:4000/api/v1/vacations/UpdateVacation/${params.VacationCode}`,
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      }
-    )
-    .then((res) => {
-      navigate("/Vacations");
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-};
-  
+      .put(
+        `http://localhost:4000/api/v1/vacations/UpdateVacation/${params.VacationCode}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      )
+      .then((res) => {
+        navigate("/Vacations");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    //upload the img
     const file = e.target.files && e.target.files[0];
     if (file) {
       setImg(file);
@@ -148,7 +148,6 @@ function EditVacation(): JSX.Element {
           <TextField
             type="date"
             required
-           
             {...register("StartDate", { required: true })}
             defaultValue={params.StartDate || ""}
             onChange={(e) => {
@@ -170,8 +169,8 @@ function EditVacation(): JSX.Element {
             required
             inputProps={{
               min: startDate
-                ? startDate.toISOString().split("T")[0]
-                : new Date().toISOString().split("T")[0],
+                ? startDate.toISOString().split("T")[0] //end date can not be prior to start date
+                : new Date().toISOString().split("T")[0], //end date can not be prior to today
             }}
             {...register("EndDate", {
               required: true,
@@ -206,9 +205,9 @@ function EditVacation(): JSX.Element {
               onInput: (e) => {
                 const value = (e.target as HTMLInputElement).valueAsNumber;
                 if (value < 0) {
-                  (e.target as HTMLInputElement).value = "0";
+                  (e.target as HTMLInputElement).value = "0"; //min value is 0
                 } else if (value > 10000) {
-                  (e.target as HTMLInputElement).value = "10000";
+                  (e.target as HTMLInputElement).value = "10000"; //min value is 10000
                 }
               },
             }}
@@ -224,8 +223,14 @@ function EditVacation(): JSX.Element {
           <br />
           <br />
           <p>Image</p>
-          {existingImg && <img src={`http://localhost:4000/${existingImg}`} alt="Vacation" width={200} />}
-          <input type="file" onChange={handleImageChange} required/>
+          {existingImg && (
+            <img
+              src={`http://localhost:4000/${existingImg}`}
+              alt="Vacation"
+              width={200}
+            /> //shown the existing img
+          )}
+          <input type="file" onChange={handleImageChange} required />
           {errors.Img?.type === "required" && (
             <p className="error-message">Image is required</p>
           )}

@@ -20,18 +20,20 @@ function Login(): JSX.Element {
   } = useForm<User>();
 
   const onSubmit = async (data: User) => {
+    //submit the form to log in to the system
     try {
       const response = await axios.post(
         "http://localhost:4000/api/v1/users/login",
         data
       );
       const result = response.data;
-      dispatch(isLoggedInAction(true));
-      dispatch(downloadUsersAction([result.user]));
+      dispatch(isLoggedInAction(true)); //dispatch the redux to adress the loged in user
+      dispatch(downloadUsersAction([result.user])); //download the user data
       navigate("/Vacations");
     } catch (error: any) {
       console.error("Error:", error);
       if (error.response?.status === 401) {
+        //checks if the user details are correct
         setErrorMessage("Email or password is incorrect");
       } else {
         setErrorMessage(error.message);
@@ -40,13 +42,14 @@ function Login(): JSX.Element {
   };
 
   const onLoginClick = () => {
+    //check if there are errors
     if (Object.keys(errors).length > 0) {
-      // If there are errors, don't login
+      // If there are errors dont login
       console.log(errors);
     } else {
       // Reset the error message
       setErrorMessage("");
-      // No errors, you can attempt to login
+      // No errors you can login
       handleSubmit(onSubmit)();
     }
   };
@@ -62,7 +65,7 @@ function Login(): JSX.Element {
             {...register("UserEmail", {
               required: true,
               pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-            })}
+            })} //checks the email pattern
           />
           {errors.UserEmail?.type === "required" && (
             <p className="error-message">Email is required.</p>
@@ -76,7 +79,7 @@ function Login(): JSX.Element {
             required
             label="Password"
             type="password"
-            {...register("UserPassword", { required: true, minLength: 4 })}
+            {...register("UserPassword", { required: true, minLength: 4 })} //check password length minimum is 4
           />
           {errors.UserPassword && (
             <p className="error-message">Password is required</p>
