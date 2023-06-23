@@ -4,11 +4,14 @@ import "./Register.css";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
+import { addUserAction } from "../../redux/userReducer";
+import { useDispatch } from "react-redux";
 
 function Register(): JSX.Element {
   const [serverError, setServerError] = useState("");
-
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const {
     register,
     handleSubmit,
@@ -39,6 +42,7 @@ function Register(): JSX.Element {
         if (res.data === "Email already exists in the database") {//check if the email exists in the data base
           setServerError("Email already exists");
         } else {
+          dispatch(addUserAction(res.data));
           navigate("/Vacations");
         }
       })
