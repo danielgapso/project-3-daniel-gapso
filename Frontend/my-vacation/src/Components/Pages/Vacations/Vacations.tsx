@@ -8,7 +8,7 @@ import { downloadVacationAction } from "../../redux/VacationReducer";
 import { vacations } from "../../redux/VacationStore";
 import Button from "@mui/material/Button";
 import { userIsAdmin } from "../../Utils/authenticatin";
-import { UserState, isLoggedInAction } from "../../redux/userReducer";
+import { UserState } from "../../redux/userReducer";
 import { useDispatch, useSelector } from "react-redux";
 
 function Vacations(): JSX.Element {
@@ -22,7 +22,6 @@ function Vacations(): JSX.Element {
   const [showTodayOnly, setShowTodayOnly] = useState(false);
   const dispatch = useDispatch();
   const isAdmin = userIsAdmin();
-
 
   const generateCSVContent = () => {
     const vacationsData = vacations.getState().allVacations.allVacations;
@@ -77,9 +76,9 @@ function Vacations(): JSX.Element {
   };
 
   useEffect(() => {
-    //get all the vacations stored in the data base
-    if (vacations.getState().allVacations.allVacations.length < 1) {
-      console.log("getting data from backend....");
+    // Get all the vacations stored in the database
+    if (vacations.getState().allVacations.allVacations.length < 1 || localVacations.length < 1) {
+      console.log("Getting data from backend....");
       axios
         .get("http://localhost:4000/api/v1/vacations/GetAllVacations")
         .then((response) => {
@@ -87,12 +86,13 @@ function Vacations(): JSX.Element {
           setRefresh(true);
         });
     }
-  }, [localVacations.length, dispatch]);
-
-  useEffect(() => {
+  
+    // Update the localVacations state
     setLocalVacations(vacations.getState().allVacations.allVacations);
-  }, [refresh]);
+  }, [localVacations.length, dispatch, refresh, vacations]);
+  
 
+  //pagnation
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const paginate = (pageNumber: number) => {

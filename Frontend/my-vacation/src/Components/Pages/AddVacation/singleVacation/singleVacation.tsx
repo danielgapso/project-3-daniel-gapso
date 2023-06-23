@@ -99,7 +99,7 @@ function SingleVacation(props: VacationProps): JSX.Element {
     axios
       .post("http://localhost:4000/api/v1/likes/addLike", requestData)
       .then((response) => {
-        console.log("userCode", UserCode);
+       
       })
       .catch((error) => {
         console.log(error);
