@@ -3,6 +3,8 @@ import { Controller, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, ButtonGroup, TextField } from "@mui/material";
+import { useDispatch } from "react-redux";
+import { addVacationAction } from "../../redux/VacationReducer";
 
 function AddVacation() {
   const [StartDate, setStartDate] = useState("");
@@ -10,6 +12,7 @@ function AddVacation() {
   const [img, setImg] = useState<File | null>(null);
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const {
     register,
@@ -58,6 +61,7 @@ function AddVacation() {
         },
       })
       .then((res) => {
+        dispatch(addVacationAction(res.data));
         navigate("/Vacations"); // navigate back to main page
       })
       .catch((error) => {

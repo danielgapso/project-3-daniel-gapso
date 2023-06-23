@@ -12,6 +12,7 @@ import Vacation from "../../../model/Vacations/Vacation";
 import { userIsAdmin } from "../../../Utils/authenticatin";
 import { changeLikesAction } from "../../../redux/userReducer";
 import { UserState } from "../../../redux/userReducer";
+import { deleteVacationAction } from "../../../redux/VacationReducer";
 
 interface VacationProps {
   vacationData: Vacation;
@@ -25,11 +26,17 @@ function SingleVacation(props: VacationProps): JSX.Element {
   const [isLiked, setIsLiked] = useState(false);
 
   const handleDelete = () => {
-    // a function to delete the vacation the admin clicks on
-    axios.delete(
-      `http://localhost:4000/api/v1/vacations/delete/${props.vacationData.VacationCode}`
-    );
-    setShowModal(false); //shows the modal that asks the user if he is sure
+    // A function to delete the vacation the admin clicks on
+    axios
+      .delete(`http://localhost:4000/api/v1/vacations/delete/${props.vacationData.VacationCode}`)
+      .then(() => {
+        dispatch(deleteVacationAction(props.vacationData.VacationCode)); // Dispatch the action with the VacationCode
+        setShowModal(false); // Hide the modal
+      })
+      .catch((error) => {
+        console.log(error);
+        // Handle error
+      });
   };
 
   const renderEditButton = () => {

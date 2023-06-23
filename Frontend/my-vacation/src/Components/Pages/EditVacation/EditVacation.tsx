@@ -4,10 +4,14 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Button, ButtonGroup, TextField } from "@mui/material";
+import { useDispatch } from "react-redux";
+import { editVacationAction } from "../../redux/VacationReducer";
 
 function EditVacation(): JSX.Element {
   const navigate = useNavigate();
   const params = useParams();
+  const dispatch = useDispatch();
+  
   const {
     register,
     handleSubmit,
@@ -96,6 +100,8 @@ function EditVacation(): JSX.Element {
         }
       )
       .then((res) => {
+        const updatedVacation = res.data; 
+        dispatch(editVacationAction(updatedVacation));
         navigate("/Vacations");
       })
       .catch((error) => {

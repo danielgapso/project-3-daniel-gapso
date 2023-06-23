@@ -23,9 +23,6 @@ function Vacations(): JSX.Element {
   const dispatch = useDispatch();
   const isAdmin = userIsAdmin();
 
-  useEffect(() => {
-    dispatch(isLoggedInAction(true));
-  }, [dispatch]);
 
   const generateCSVContent = () => {
     const vacationsData = vacations.getState().allVacations.allVacations;
@@ -90,7 +87,7 @@ function Vacations(): JSX.Element {
           setRefresh(true);
         });
     }
-  }, []);
+  }, [localVacations.length, dispatch]);
 
   useEffect(() => {
     setLocalVacations(vacations.getState().allVacations.allVacations);
