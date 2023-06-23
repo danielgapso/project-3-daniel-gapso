@@ -53,14 +53,12 @@ export function usersReducer(
     case UserActionType.downloadUsers:
       const user = action.payload[0];
       const likedVacationsString = user.likedVacations || '[]';
-      const likedVacations = JSON.parse(likedVacationsString) as unknown;
-      if (Array.isArray(likedVacations)) {
-        newState.users = [{ ...user, likedVacations: likedVacations.filter((value) => typeof value === 'number') }];
-      } else {
-        newState.users = [{ ...user, likedVacations: [] }];
-      }
-      break;
-
+      const likedVacations = JSON.parse(likedVacationsString) as number[];
+      const userWithLikedVacations = { ...user, likedVacations };
+      return {
+        ...currentState,
+        users: [userWithLikedVacations],
+      };
     //checks if the user logged in
     case UserActionType.isLoggedIn:
       newState.isLoggedIn = action.payload;
