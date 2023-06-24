@@ -113,6 +113,7 @@ export function VacationReducer(
       const unlikedVacations = currentState.allVacations.map((vacation) => {
         if (vacation.VacationCode === unlikedVacationId) {
           const updatedLikes = (vacation.likes || 0) - 1;
+          console.log(`UnLiked vacation with ID ${unlikedVacationId}`);
           return {
             ...vacation,
             likes: updatedLikes,

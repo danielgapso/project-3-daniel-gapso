@@ -12,7 +12,7 @@ import Vacation from "../../../model/Vacations/Vacation";
 import { userIsAdmin } from "../../../Utils/authenticatin";
 import { changeLikesAction } from "../../../redux/userReducer";
 import { UserState } from "../../../redux/userReducer";
-import { deleteVacationAction } from "../../../redux/VacationReducer";
+import { deleteVacationAction, vacationLikes, vacationUnlike } from "../../../redux/VacationReducer";
 
 interface VacationProps {
   vacationData: Vacation;
@@ -23,7 +23,6 @@ function SingleVacation(props: VacationProps): JSX.Element {
   const [showModal, setShowModal] = useState(false);
   const isAdmin = userIsAdmin();
   const dispatch = useDispatch();
-  const [isLiked, setIsLiked] = useState(false);
 
   const handleDelete = () => {
     // A function to delete the vacation the admin clicks on
@@ -77,20 +76,19 @@ function SingleVacation(props: VacationProps): JSX.Element {
       state.allUsers.users[0]?.likedVacations || []
   );
 
-  useEffect(() => {
-    // Check if the vacation is liked by the logged in user
-    const isVacationLiked = likedVacations.includes(
-      props.vacationData.VacationCode
-    );
-    setIsLiked(isVacationLiked);
-  }, [likedVacations, props.vacationData.VacationCode]);
+  const isLiked = useSelector((state: { allUsers: UserState }) => {
+    const likedVacations = state.allUsers.users[0]?.likedVacations || [];
+    return likedVacations.includes(props.vacationData.VacationCode);
+  });
 
+ 
   const handleLike = () => {
-    // a function to toggle between the like or unlike
-    setIsLiked(!isLiked);
     const likedVacationId = props.vacationData.VacationCode;
-    dispatch(changeLikesAction([likedVacationId]));
-
+    if (isLiked) {
+      dispatch(vacationUnlike(likedVacationId));
+    } else {
+      dispatch(vacationLikes(likedVacationId));
+    }
     const requestData = {
       UserCode,
       VacationCode: likedVacationId,
@@ -99,7 +97,7 @@ function SingleVacation(props: VacationProps): JSX.Element {
     axios
       .post("http://localhost:4000/api/v1/likes/addLike", requestData)
       .then((response) => {
-       
+        dispatch(changeLikesAction([likedVacationId]));
       })
       .catch((error) => {
         console.log(error);
