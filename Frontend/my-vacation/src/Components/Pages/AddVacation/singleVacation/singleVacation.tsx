@@ -12,7 +12,7 @@ import Vacation from "../../../model/Vacations/Vacation";
 import { userIsAdmin } from "../../../Utils/authenticatin";
 import { changeLikesAction } from "../../../redux/userReducer";
 import { UserState } from "../../../redux/userReducer";
-import { deleteVacationAction, vacationLikes, vacationUnlike } from "../../../redux/VacationReducer";
+import { deleteVacationAction } from "../../../redux/VacationReducer";
 
 interface VacationProps {
   vacationData: Vacation;
@@ -86,15 +86,11 @@ function SingleVacation(props: VacationProps): JSX.Element {
   }, [likedVacations, props.vacationData.VacationCode]);
 
   const handleLike = () => {
-    setIsLiked(!isLiked); // Toggle the isLiked state
-  
+    // a function to toggle between the like or unlike
+    setIsLiked(!isLiked);
     const likedVacationId = props.vacationData.VacationCode;
-  
-    if (!isLiked) {
-      dispatch(vacationLikes(likedVacationId)); // Dispatch vacationLikes action with the vacation ID
-    } else {
-      dispatch(vacationUnlike(likedVacationId)); // Dispatch vacationUnlike action with the vacation ID
-    }
+    dispatch(changeLikesAction([likedVacationId]));
+
     const requestData = {
       UserCode,
       VacationCode: likedVacationId,
