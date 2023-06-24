@@ -71,11 +71,6 @@ function SingleVacation(props: VacationProps): JSX.Element {
     (state: { allUsers: UserState }) => state.allUsers.users[0]?.UserCode
   );
 
-  const likedVacations = useSelector(
-    (state: { allUsers: UserState }) =>
-      state.allUsers.users[0]?.likedVacations || []
-  );
-
   const isLiked = useSelector((state: { allUsers: UserState }) => {
     const likedVacations = state.allUsers.users[0]?.likedVacations || [];
     return likedVacations.includes(props.vacationData.VacationCode);
