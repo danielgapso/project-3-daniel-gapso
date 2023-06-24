@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
@@ -12,7 +12,11 @@ import Vacation from "../../../model/Vacations/Vacation";
 import { userIsAdmin } from "../../../Utils/authenticatin";
 import { changeLikesAction } from "../../../redux/userReducer";
 import { UserState } from "../../../redux/userReducer";
-import { deleteVacationAction, vacationLikes, vacationUnlike } from "../../../redux/VacationReducer";
+import {
+  deleteVacationAction,
+  vacationLikes,
+  vacationUnlike,
+} from "../../../redux/VacationReducer";
 
 interface VacationProps {
   vacationData: Vacation;
@@ -27,7 +31,9 @@ function SingleVacation(props: VacationProps): JSX.Element {
   const handleDelete = () => {
     // A function to delete the vacation the admin clicks on
     axios
-      .delete(`http://localhost:4000/api/v1/vacations/delete/${props.vacationData.VacationCode}`)
+      .delete(
+        `http://localhost:4000/api/v1/vacations/delete/${props.vacationData.VacationCode}`
+      )
       .then(() => {
         dispatch(deleteVacationAction(props.vacationData.VacationCode)); // Dispatch the action with the VacationCode
         setShowModal(false); // Hide the modal
@@ -76,7 +82,13 @@ function SingleVacation(props: VacationProps): JSX.Element {
     return likedVacations.includes(props.vacationData.VacationCode);
   });
 
- 
+  useEffect(() => {
+    // Trigger effect when props.vacationData.likes changes
+    // Perform any necessary actions here
+    // For example, you can dispatch an action or update local state
+    console.log("props.vacationData.likes changed:", props.vacationData.likes);
+  }, [props.vacationData.likes]);
+
   const handleLike = () => {
     const likedVacationId = props.vacationData.VacationCode;
     if (isLiked) {
@@ -104,7 +116,7 @@ function SingleVacation(props: VacationProps): JSX.Element {
     if (!isAdmin) {
       return (
         <Button size="small" onClick={handleLike}>
-          {isLiked ? "Unlike" : "Like"} 💖
+          {isLiked ? "Unlike" : "Like"} 💖 {props.vacationData.likes}
         </Button>
       );
     }
@@ -147,9 +159,6 @@ function SingleVacation(props: VacationProps): JSX.Element {
               </span>
               <br />
               <span>Price: {props.vacationData.Price} $</span>
-              <br />
-              <br />
-              <span>Was liked by {props.vacationData.likes} 💖</span>
             </Typography>
           </CardContent>
           <CardActions>

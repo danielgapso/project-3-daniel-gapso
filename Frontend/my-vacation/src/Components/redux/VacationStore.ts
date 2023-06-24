@@ -4,8 +4,6 @@ import { usersReducer } from "./userReducer";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/es/storage";
 
-
-
 const persistConfig = {
   key: "main-root",
   storage,
