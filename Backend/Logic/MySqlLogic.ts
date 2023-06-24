@@ -13,8 +13,8 @@ const CreateUsersTable = () => {
         UserFirstName VARCHAR(45) NOT NULL,
         UserLastName VARCHAR(45) NOT NULL,
         UserPassword VARCHAR(45) NOT NULL,
-        UserEmail VARCHAR(45) NOT NULL,
-        isAdmin TINYINT NOT NULL,
+        UserEmail VARCHAR(255) NOT NULL,
+        isAdmin TINYINT NOT NULL DEFAULT 0,
         likedVacations JSON NULL,
         PRIMARY KEY (UserCode)
     );
