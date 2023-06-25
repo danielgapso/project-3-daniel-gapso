@@ -1,0 +1,80 @@
+services:
+  vacations-database-service:
+    image: danielgapso/vacations-database-image:1.0
+
+    container_name: vacations-database-container
+    
+    build: ./Database
+     
+    ports:
+      - 3306:3306
+
+    environment:
+      MYSQL_HOST: localhost
+      MYSQL_DATABASE: vacations
+      MYSQL_USER: root
+      MYSQL_PASSWORD: 12345678
+      MYSQL_ROOT_PASSWORD: 12345678
+
+      restart: unless-stopped
+
+    volumes:
+      - vacations:/var/lib/mysql
+
+   #------------------------------------------------------------------
+  vacations-backend-service:
+    image: danielgapso/vacations-backend-image:1.0
+    
+    build: ./Backend
+
+    container_name: vacations-backend-container
+
+    ports:
+      - 4000:4000
+
+    environment:
+      PORT: 4000
+      MYSQL_HOST: vacations-database-service
+      MYSQL_DATABASE: vacations
+      MYSQL_USER: root
+      MYSQL_PASSWORD: 12345678
+
+    restart: unless-stopped
+    
+    volumes:
+      - ./Backend:/app
+
+    depends_on:
+      - vacations-database-service
+
+   #------------------------------------------------------------------
+
+  vacations-frontend-service:
+    image: danielgapso/vacations-frontend-image:1.0
+
+    build:
+      ./my-vacation
+
+    container_name: vacations-frontend-container
+
+    ports:
+      - 3000:3000
+
+    environment:
+      PORT: 3000
+      REACT_APP_BACKEND_URL: http://localhost:4000
+    
+    restart: unless-stopped
+
+    volumes:
+      - ./my-vacation:/app
+
+    depends_on:
+      - vacations-backend-service
+ 
+volumes:
+  vacations:
+
+
+
+    
