@@ -7,7 +7,7 @@ services:
     build: ./Database
      
     ports:
-      - 3306:3306
+      - "3307:3306"
 
     environment:
       MYSQL_HOST: localhost
@@ -43,6 +43,7 @@ services:
     
     volumes:
       - ./Backend:/app
+      - /app/node_modules 
 
     depends_on:
       - vacations-database-service

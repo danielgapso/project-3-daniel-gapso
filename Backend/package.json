@@ -22,8 +22,10 @@
     "loadsh": "^0.0.4",
     "mysql": "^2.18.1",
     "mysql2": "^3.4.1",
-    "node": "^20.2.0"
-  },
+    "node": "^20.2.0",
+    "nodemon": "^2.0.12",
+    "ts-node": "^10.2.1"
+  },  
   "devDependencies": {
     "@types/node": "^20.3.1"
   }

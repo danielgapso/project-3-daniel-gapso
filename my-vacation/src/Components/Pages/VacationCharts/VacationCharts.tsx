@@ -2,7 +2,8 @@ import "./VacationCharts.css";
 import React, { useEffect, useState } from "react";
 import { Bar, BarChart, CartesianGrid, Tooltip, XAxis, YAxis } from "recharts";
 import axios from "axios";
-import { Typography } from "@mui/material";
+import { Button, Typography } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const url = "http://localhost:4000/api/v1/likes";
 
@@ -10,6 +11,7 @@ function VacationCharts(): JSX.Element {
   const [vacations, setVacations] = useState([]);
   const [showLiked, setShowLiked] = useState(true);
   const [filteredVacations, setFilteredVacations] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getData = async () => {
@@ -43,6 +45,9 @@ function VacationCharts(): JSX.Element {
 
   return (
     <div className="VacationCharts">
+      <Button color="primary" onClick={() => navigate("/Vacations")}>
+      ⬅️ Vacations
+      </Button>
       <div className="reportChart">
         <Typography variant="h4">Vacations Reports</Typography>
         <BarChart width={1400} height={500} data={data}>
