@@ -38,6 +38,7 @@ CREATE TABLE `followers` (
 
 LOCK TABLES `followers` WRITE;
 /*!40000 ALTER TABLE `followers` DISABLE KEYS */;
+INSERT INTO `followers` VALUES (2,7),(57,10),(57,2),(57,8),(2,2),(2,8);
 /*!40000 ALTER TABLE `followers` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -66,7 +67,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'admin','admin','1111','ddd@gmail.com',1,'null'),(2,'first','user','1111','test@mail.com',0,'[]'),(57,'test2','test2','1111','a@qqq.c',0,'[]');
+INSERT INTO `users` VALUES (1,'admin','admin','1111','ddd@gmail.com',1,'null'),(2,'first','user','1111','test@mail.com',0,'[7, 2, 8]'),(57,'test2','test2','1111','a@qqq.c',0,'[10, 2, 8]');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -85,7 +86,7 @@ CREATE TABLE `vacations` (
   `EndDate` varchar(45) NOT NULL,
   `Price` varchar(45) NOT NULL,
   `Img` varchar(256) NOT NULL,
-  `likes` varchar(45) NOT NULL,
+  `likes` int NOT NULL DEFAULT '0',
   PRIMARY KEY (`VacationCode`)
 ) ENGINE=InnoDB AUTO_INCREMENT=143 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -96,7 +97,7 @@ CREATE TABLE `vacations` (
 
 LOCK TABLES `vacations` WRITE;
 /*!40000 ALTER TABLE `vacations` DISABLE KEYS */;
-INSERT INTO `vacations` VALUES (1,'EGYPT ','cairo','2023-06-27','2023-06-29','200','egypt.jpg','0'),(2,'USA','NYC','2023-06-21','2023-06-22','200','nyc.jpg','0'),(3,'USA','HAWAI','2023-06-20','2023-06-22','500','hawai.jpg','0'),(4,'germany','berlin','2023-06-27','2023-06-29','500','berlin.jpeg','0'),(5,'germany','munich','2023-06-29','2023-07-01','400','munich.webp','0'),(6,'russia','moscow','2023-06-21','2023-06-23','300','moscow.jpg','0'),(7,'romania','bucharest','2023-06-20','2023-06-22','150','bucharest.jpg','0'),(8,'england','london','2023-06-20','2023-06-22','550','london.jpg','0'),(9,'japan','tokyo','2023-06-27','2023-06-28','250','tokyo.jpg','0'),(10,'italy','rome','2023-06-18','2023-06-27','500','rome.jpg','0'),(11,'france','paris','2023-06-28','2023-06-30','400','paris.jpg','0'),(12,'china','beijing','2023-06-29','2023-07-01','550','beijing.webp','0');
+INSERT INTO `vacations` VALUES (1,'EGYPT ','cairo','2023-06-27','2023-06-29','200','egypt.jpg',0),(2,'USA','NYC','2023-06-21','2023-06-22','200','nyc.jpg',2),(3,'USA','HAWAI','2023-06-20','2023-06-22','500','hawai.jpg',0),(4,'germany','berlin','2023-06-27','2023-06-29','500','berlin.jpeg',0),(5,'germany','munich','2023-06-29','2023-07-01','400','munich.webp',0),(6,'russia','moscow','2023-06-21','2023-06-23','300','moscow.jpg',0),(7,'romania','bucharest','2023-06-20','2023-06-22','150','bucharest.jpg',1),(8,'england','london','2023-06-20','2023-06-22','550','london.jpg',2),(9,'japan','tokyo','2023-06-27','2023-06-28','250','tokyo.jpg',0),(10,'italy','rome','2023-06-18','2023-06-27','500','rome.jpg',1),(11,'france','paris','2023-06-28','2023-06-30','400','paris.jpg',0),(12,'china','beijing','2023-06-29','2023-07-01','550','beijing.webp',0);
 /*!40000 ALTER TABLE `vacations` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -109,4 +110,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-06-24 17:25:19
+-- Dump completed on 2023-06-27 13:03:22
