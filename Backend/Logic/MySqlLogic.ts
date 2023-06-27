@@ -33,7 +33,7 @@ const createVacationsTable = () => {
         EndDate VARCHAR(45) NOT NULL,
         Price VARCHAR(45) NOT NULL,
         Img VARCHAR(256) NOT NULL,
-        likes VARCHAR(45) NOT NULL,
+        likes INT NOT NULL DEFAULT 0,
         PRIMARY KEY (VacationCode));
         `;
   const response = dal_mysql.execute(SQLcommand);

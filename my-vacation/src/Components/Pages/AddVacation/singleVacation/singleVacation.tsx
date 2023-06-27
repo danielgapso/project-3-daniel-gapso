@@ -27,7 +27,8 @@ function SingleVacation(props: VacationProps): JSX.Element {
   const [showModal, setShowModal] = useState(false);
   const isAdmin = userIsAdmin();
   const dispatch = useDispatch();
-
+  const [likesCount, setLikesCount] = useState(0);
+  
   const handleDelete = () => {
     // A function to delete the vacation the admin clicks on
     axios
@@ -92,10 +93,13 @@ function SingleVacation(props: VacationProps): JSX.Element {
   const handleLike = () => {
     const likedVacationId = props.vacationData.VacationCode;
     if (isLiked) {
-      dispatch(vacationUnlike(likedVacationId));
+      setLikesCount(likesCount - 1);
+      dispatch(vacationUnlike(props.vacationData.VacationCode));
     } else {
-      dispatch(vacationLikes(likedVacationId));
+      setLikesCount(likesCount + 1);
+      dispatch(vacationLikes(props.vacationData.VacationCode));
     }
+
     const requestData = {
       UserCode,
       VacationCode: likedVacationId,
@@ -112,16 +116,19 @@ function SingleVacation(props: VacationProps): JSX.Element {
   };
 
   const renderLikeButton = () => {
-    //the like button
     if (!isAdmin) {
       return (
         <Button size="small" onClick={handleLike}>
-          {isLiked ? "Unlike" : "Like"} 💖 {props.vacationData.likes}
+          {isLiked ? "Unlike" : "Like"} 💖 {likesCount}
         </Button>
       );
     }
     return null;
   };
+
+useEffect(() => {
+    setLikesCount(props.vacationData.likes);
+  }, [props.vacationData.likes]);
 
   const renderFormattedDate = (dateString: string) => {
     //change the date to dd/mm/yy
