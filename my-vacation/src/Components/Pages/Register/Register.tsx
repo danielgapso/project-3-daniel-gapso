@@ -43,7 +43,7 @@ function Register(): JSX.Element {
           setServerError("Email already exists");
         } else {
           dispatch(addUserAction(res.data));
-          navigate("/Vacations");
+          navigate("/Login");
         }
       })
       .catch((error) => {

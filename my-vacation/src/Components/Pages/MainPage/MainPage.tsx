@@ -6,9 +6,9 @@ function MainPage(): JSX.Element {
     //navigate accordingly to login or register
     <div className="MainPage">
       <span>Please</span>
-      <NavLink to="/Login"> Login</NavLink>&nbsp; | &nbsp; | &nbsp;
+      <NavLink to="/Login"> Login 🔓</NavLink>&nbsp; | &nbsp; | &nbsp;
       <span>Or</span>
-      <NavLink to="/Register"> Register</NavLink>
+      <NavLink to="/Register"> Register 📝</NavLink>
     </div>
   );
 }
